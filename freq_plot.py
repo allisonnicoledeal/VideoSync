@@ -3,7 +3,7 @@ import scipy.io.wavfile
 import matplotlib.pyplot as plt
 from pylab import plot, show, title, xlabel, ylabel, subplot
 
-rate, data = scipy.io.wavfile.read('MelRhyBecca1.wav')
+rate, data = scipy.io.wavfile.read('Hiphopopotamus.wav')
 print "RATE: ", rate
 print "DATA: ", data
 data_bis = numpy.fft.ifft(numpy.fft.fft(data))

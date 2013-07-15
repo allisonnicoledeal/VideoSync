@@ -1,0 +1,12 @@
+Flask==0.10.1
+Jinja2==2.7
+MarkupSafe==0.18
+PIL==1.1.7
+Werkzeug==0.9.1
+ipython==0.13.2
+itsdangerous==0.22
+matplotlib==1.2.1
+numpy==1.7.1
+pyobjc==2.2
+scipy==0.12.0
+wsgiref==0.1.2
