@@ -1,23 +1,33 @@
-import numpy
+import numpy as np
 import scipy.io.wavfile
 import matplotlib.pyplot as plt
-from pylab import plot, show, title, xlabel, ylabel, subplot
+from pylab import *
+from scipy import *
 
-rate, data = scipy.io.wavfile.read('Hiphopopotamus.wav')
+rate, data = scipy.io.wavfile.read('Hiphopopotamus.wav')  # Return the sample rate (in samples/sec) and data from a WAV file
 print "RATE: ", rate
 print "DATA: ", data
-data_bis = numpy.fft.ifft(numpy.fft.fft(data))
-print "DATA_BIS: ", data_bis
-print "DATA_BIS TYPE: ", data_bis.dtype
 
-data_plot = abs(data_bis)
-data_sample = data_plot[0:100000, 0]
-print 'LENGTH OF DATA PLOT: ', len(data_plot)
-print "ABS VALUE DATA: ", data_sample
-print "DATA TYPE: ", type(data_sample)
-print "ELEMENT DATA TYPE: ", data_sample.dtype
+data_sample = data[0:50000]
 
+fft_data = np.fft.fft(data)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
+print "FFT DATA:", fft_data
 
-f = numpy.linspace(rate, len(data_sample), endpoint=False)
+fft_plot = abs(fft_data)  # Taking abs value to get distance from zero (amplitude of frequency)
+print 'LENGTH OF DATA PLOT: ', len(fft_plot)
+print "DATA TYPE: ", type(fft_plot)
+print "ELEMENT DATA TYPE: ", fft_plot.dtype
+
+fft_plot_sample = fft_plot[0:50000]  #, 0]  # Testing subset of data
+print "LENGTH OF DATA SAMPLE: ", len(fft_plot_sample)
+print "DATA SAMPLE: ", fft_plot_sample
+
+t = np.linspace(0,)
+# https://sites.google.com/site/haskell102/home/frequency-analysis-of-audio-file-with-python-numpy-scipy
 plt.plot(data_sample)
 plt.show()
+
+
+
+
+# pylab.specgram(fft_plot_sample)
