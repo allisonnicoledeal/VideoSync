@@ -17,12 +17,22 @@ for i in range(len(data)):
 print "DATA LR AVG: ", data_lr_avg[10000:20000]
 
 data_lr_avg_sample = []
-for i in range(0,len(data_lr_avg),)
+for i in range(0, len(data_lr_avg), rate):
+    sample = []
+    for j in range(i, i+rate):
+        sample[j] = j
+        sample_avg = sum(sample)/len(sample)
+        data_lr_avg_sample.append(sample)
+
+print "DATA LR AVG SAMPLE: ", data_lr_avg_sample
+print "DATA LR AVG SAMPLE LEN:", len(data_lr_avg_sample)
+
+# fft_data = np.fft.fft(data_lr_avg_sample)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
+# print "FFT DATA:", fft_data
 
 # data_sample = data[0:50000]
 
-# fft_data = np.fft.fft(data)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
-# print "FFT DATA:", fft_data
+
 
 # fft_plot = abs(fft_data)  # Taking abs value to get distance from zero (amplitude of frequency)
 # print 'LENGTH OF DATA PLOT: ', len(fft_plot)
