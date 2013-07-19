@@ -1,12 +1,12 @@
 import numpy as np
 import scipy.io.wavfile
-import matplotlib.pyplot as plt
-from pylab import *
+# import matplotlib.pyplot as plt
+# from pylab import *
 from scipy import *
 
 rate, data = scipy.io.wavfile.read('Hiphopopotamus.wav')  # Return the sample rate (in samples/sec) and data from a WAV file
 print "RATE: ", rate
-print "DATA: ", data[10000:20000]
+print "DATA: ", data[10000:20000]  # taking sample of track
 print "DATA LEN: ", len(data)
 
 data_test = data[:(rate*20)]
@@ -20,21 +20,77 @@ for i in range(len(data_test)):
 # print "DATA LR AVG: ", data_lr_avg
 print "DATA LR AVG LEN: ", len(data_lr_avg)
 
-data_lr_avg_sample = []
-samples_sec = rate/10
-for i in range(0, len(data_lr_avg), samples_sec):
-    sample = data_lr_avg[i:i+samples_sec]
-    sample_avg = sum(sample)/len(sample)
-    data_lr_avg_sample.append(sample_avg)
+d = {}
+num_samp_sec = 10
 
-print "DATA LR AVG SAMPLE: ", data_lr_avg_sample
-print "DATA LR AVG SAMPLE LEN:", len(data_lr_avg_sample)
+# sample_dict = {}
 
-fft_data = np.fft.fft(data_lr_avg_sample)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
-print "FFT DATA:", fft_data
+# for i in range(0, len(data_lr_avg)/rate/num_samp_sec, 1):
+#     sample_dict[i] = None
 
-fft_plot = abs(fft_data)  # Taking abs value to get distance from zero (amplitude of frequency)
-print "FFT PLOT: ", fft_plot
+# for j in range(len(sample_dict)):
+#     for k in range(num_samp_sec):
+#             sample_dict[j] = data_lr_avg[k:k+num_samp_sec]
+
+# # for i in range(0, len(data_lr_avg), rate/num_samp_sec):
+# #     sample_dict[i] = data_lr_avg[i:i+num_samp_sec]
+
+# print sample_dict
+
+ # ===========================================
+for i in range(0, 1):  # WHOLE SONG # i is sample number, s1, s2, etc.
+    sample = []
+    # get first sample, s1 (one second)
+    for j in range(0, rate, (rate/num_samp_sec)):
+        sample.append(data_lr_avg[j])
+
+    print "SAMPLE LENGTH:", len(sample), "SHOULD EQUAL", num_samp_sec
+
+    fft_data = np.fft.fft(sample)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
+    print "FFT DATA:", fft_data
+
+    fft_abs = abs(fft_data)  # Taking abs value to get distance from zero (amplitude of frequency)
+    print "FFT ABS: ", fft_abs
+    max_fft_abs = max(fft_abs)
+    print "MAX FFT ABS:", max(fft_abs)
+
+    dict_key = max_fft_abs
+    print "DICT KEY: ", dict_key
+
+    if dict_key in d.keys() is not None:   # if dict key exists, append
+        d[dict_key].append(i)  # k is frequency(key) and i is sample number(value)
+    else:  # else create dict key and assign value
+        d[dict_key] = i
+
+
+print "DICTIONARY: ", d
+
+ # ===========================================
+
+# data_lr_avg_sample = []
+# samples_sec = rate/10
+# for i in range(0, len(data_lr_avg), samples_sec):
+#     sample = data_lr_avg[i:i+samples_sec]
+
+#     sample_avg = sum(sample)/len(sample)
+#     data_lr_avg_sample.append(sample_avg)
+
+# data_lr_avg_sample = []
+# samples_sec = rate/10
+# for i in range(0, len(data_lr_avg), samples_sec):
+#     sample = data_lr_avg[i:i+samples_sec]
+
+#     sample_avg = sum(sample)/len(sample)
+#     data_lr_avg_sample.append(sample_avg)
+
+# print "DATA LR AVG SAMPLE: ", data_lr_avg_sample
+# print "DATA LR AVG SAMPLE LEN:", len(data_lr_avg_sample)
+
+# fft_data = np.fft.fft(data_lr_avg_sample)  # Compute the one-dimensional discrete Fourier Transform. (Returns complex values)
+# print "FFT DATA:", fft_data
+
+# fft_plot = abs(fft_data)  # Taking abs value to get distance from zero (amplitude of frequency)
+# print "FFT PLOT: ", fft_plot
 # http://www.lomont.org/Software/Misc/FFT/SimpleFFT.pdf
 
 # print 'LENGTH OF DATA PLOT: ', len(fft_plot)
@@ -43,9 +99,9 @@ print "FFT PLOT: ", fft_plot
 
 
 # # t = np.linspace(0,)
-# # https://sites.google.com/site/haskell102/home/frequency-analysis-of-audio-file-with-python-numpy-scipy
-plt.plot(fft_plot)
-plt.show()
+# # # https://sites.google.com/site/haskell102/home/frequency-analysis-of-audio-file-with-python-numpy-scipy
+# plt.plot(fft_plot)
+# plt.show()
 
 
 
