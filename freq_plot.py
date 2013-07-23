@@ -35,7 +35,7 @@ def process_second(s, num):
         mono = channel_avg(s[i])
         split = split_samples(mono, num)
         fft = fourier(split)
-        max = max_freq(fft, i)
+        max = max_freq(fft, i, num)
 
         if max[0] in d.keys() is not None:   # if dict key exists, append
             d[max[0]].append(max[1])  # dict_key is max freq and dict_value is time
@@ -85,17 +85,35 @@ def fourier(sample):
 # Add max freq in a given second-long sample to time-freq table
 # INPUT: Dict and list of fourier transform results, with len of num samples per second
 # OUTPUT: None, adds key-value pair to dictionary
-def max_freq(fft_abs, sec):
+def max_freq(fft_abs, sec, num):
     max_fft_abs = max(fft_abs)
     dict_value = None
     for i in range(len(fft_abs)):  # Need to find which 1/10th of sec highest freq occurs
         if fft_abs[i] == max_fft_abs:
-            tenth = float(i)/float(10)
-            dict_value = float(sec) + tenth # !!!!!!!!!!!!!!!!!!!!!!!!!! NEED TO TRACK SECOND
+            portion_of_sec = float(i)/float(num)
+            dict_value = float(sec) + portion_of_sec
 
     dict_key = round(max_fft_abs, 2) # Round freq to 2 decimal places
     return (dict_key, dict_value)
 
+# Compare two dictionary objects to see if one is a subset of the other
+# INPUT: Two dictionaries, number of consecutive matches to be considered
+    # a match, error margin
+def compare(d1, d2, consec, err):
+    i = 0
+    j = 0
+    while (i <= len(d1)) and (j <=len(d2)):
+        if (d2[j] <= (d1[i]+err)) or (d2[j] <= (d1[i]+err)): # TODO!!!!!!!!!!1 # incorporate room for error
+            i+=1
+            j+=1
+        else:
+            i+=1
+            j=0
+
+        if j = consec:
+            return True
+
+    return False
 
 
 # Main method 
@@ -104,8 +122,9 @@ a2 = create_samples(a1)
 a3 = process_second(a2, 10)
 
 b1 = read_audio('Hiphopopotamus.wav')
-b2 = b1[44099:(44100*3)]
+b2 = b1[44099:(44100*10)]
 b3 = create_samples(b2)
 b4 = process_second(b3, 10)
 
 asorted2 = sorted(a3.items(), key=lambda x: x[1])
+bsorted2 = sorted(b4.items(), key=lambda x: x[1])
