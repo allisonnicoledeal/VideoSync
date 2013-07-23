@@ -7,6 +7,7 @@ import numpy as np
 
 sample_rate = 44100
 
+
 # Read file
 # INPUT: Audio file
 # OUTPUT: Sets sample rate of wav file, Returns data read from wav file (numpy array of integers)
@@ -21,7 +22,7 @@ def create_samples(data):
     second = 0
     for i in range(0, len(data), sample_rate):
         s[second] = data[i:i+sample_rate]
-        second+=1
+        second += 1
 
     return s
 
@@ -41,8 +42,8 @@ def process_second(s, num):
             d[max[0]].append(max[1])  # dict_key is max freq and dict_value is time
         else:  # else create dict key and assign value
             d[max[0]] = max[1]
- 
-    return d
+
+    return sorted(d.items(), key=lambda x: x[1])
 
 
 # =================================================================
@@ -90,41 +91,69 @@ def max_freq(fft_abs, sec, num):
     dict_value = None
     for i in range(len(fft_abs)):  # Need to find which 1/10th of sec highest freq occurs
         if fft_abs[i] == max_fft_abs:
-            portion_of_sec = float(i)/float(num)
+            portion_of_sec = round((float(i)/float(num)), 2)
             dict_value = float(sec) + portion_of_sec
 
-    dict_key = round(max_fft_abs, 2) # Round freq to 2 decimal places
+    dict_key = round(max_fft_abs, 2)  # Round freq to 2 decimal places
     return (dict_key, dict_value)
 
-# Compare two dictionary objects to see if one is a subset of the other
+
+# Compare two value-sorted dictionary objects to see if d1 is an overlap/within d2
 # INPUT: Two dictionaries, number of consecutive matches to be considered
     # a match, error margin
-def compare(d1, d2, consec, err):
+# OUTPUT: True if match, False if no match
+def compare(d1, d2, consec, err):  # start testing err value 10
     i = 0
     j = 0
-    while (i <= len(d1)) and (j <=len(d2)):
-        if (d2[j] <= (d1[i]+err)) or (d2[j] <= (d1[i]+err)): # TODO!!!!!!!!!!1 # incorporate room for error
-            i+=1
-            j+=1
-        else:
-            i+=1
-            j=0
+    time_offset = None
+    while (i < len(d1)) and (j < len(d2)):
+        print "I: ", i
+        print "J: ", j
+        if j == 0:  # sets the time offset when the first match is found
+            time_offset = abs(d1[i][1]-d2[j][1])
+            print "J = 0. TIME OFFSET: ", time_offset
 
-        if j = consec:
+        freq_delta = abs(d1[i][0]-d2[j][0])
+        print "FREQ DELTA: ", freq_delta
+        time_delta = abs(d1[i][1]-d2[j][1])
+        print "TIME DELTA: ", time_delta
+
+        if ((freq_delta <= err) and ((time_delta-time_offset) <= 1.0)):  # if potential match (freq err is < given and time offset aligns)
+            print "FREQ DELTA ERR SMALL AND TIME OFFSET MATCH"
+  
+            time_offset = time_delta  # abs not necessary?
+            print 'TIME OFFSET: ', time_offset
+            print ""
+            i += 1  # go to next index to check if next items match
+            j += 1
+
+        else:  # reset d2 counter and time offest if match not found
+            print 'MATCH NOT FOUND, INCREASE I, RESET J AND OFFSET'
+            print ""
+            i += 1
+            j = 0
+            time_offset = None
+
+        if j == consec:
+            print consec, "CONSECUTIVE MATCHES FOUND"
             return True
 
+    print consec, 'CONSEC MATCHES NOT FOUND'
     return False
 
 
-# Main method 
+# Main method
 a1 = read_audio('Hiphopopotamus.wav')
 a2 = create_samples(a1)
 a3 = process_second(a2, 10)
 
 b1 = read_audio('Hiphopopotamus.wav')
-b2 = b1[44099:(44100*10)]
+b2 = b1[400000:700000]
 b3 = create_samples(b2)
 b4 = process_second(b3, 10)
 
-asorted2 = sorted(a3.items(), key=lambda x: x[1])
-bsorted2 = sorted(b4.items(), key=lambda x: x[1])
+# d1 = a3[0:5]
+# d2 = b4[0:3]
+
+# compare(a3, b4, 3, 300)
+
