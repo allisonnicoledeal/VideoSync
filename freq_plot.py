@@ -1,3 +1,6 @@
+#  How to track sample rate?
+#  Create song class
+
 import scipy.io.wavfile
 import numpy as np
 
@@ -96,6 +99,13 @@ def max_freq(fft_abs, sec):
 
 
 # Main method 
-a = read_audio('Hiphopopotamus.wav')
-s = create_samples(a)
-p = process_second(s, 10)
+a1 = read_audio('Hiphopopotamus.wav')
+a2 = create_samples(a1)
+a3 = process_second(a2, 10)
+
+b1 = read_audio('Hiphopopotamus.wav')
+b2 = b1[44099:(44100*3)]
+b3 = create_samples(b2)
+b4 = process_second(b3, 10)
+
+asorted2 = sorted(a3.items(), key=lambda x: x[1])
