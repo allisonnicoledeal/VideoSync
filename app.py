@@ -31,15 +31,33 @@ def upload_file():
             filename1 = secure_filename(file1.filename)
             file1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
 
-            # save file info in db
-            new_filename1= filename1
-            new_title1 = request.args.get("title1")
-            new_artist1 = request.args.get("artist1")
-            new_file1 = model.Track(title=new_title1, filename=new_filename1, artist=new_artist1)
+            # save files info in db
+            new_filename1 = filename1
+            new_title = request.args.get("title")
+            new_artist = request.args.get("artist")
+            new_event = request.args.get("event")
+            new_file1 = model.Track(title=new_title, filename=new_filename, artist=new_artist)
             model.session.add(new_file1)
+            
+            new_filename2 = filename2
+            new_file2 = model.Track(title=new_title, filename=new_filename, artist=new_artist)
+            model.session.add(new_file2)
+
             model.session.commit()
 
-            return redirect(url_for('uploaded_file', filename=filename1))
+        # file2 = request.files['file2']
+        # if file2 and allowed_file(file2.filename):
+        #     # upload file
+        #     filename2 = secure_filename(file2.filename)
+        #     file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+
+            # save files info in db
+            # new_filename2 = filename2
+            # new_file2 = model.Track(title=new_title, filename=new_filename, artist=new_artist)
+            # model.session.add(new_file2)
+            # model.session.commit()
+
+            return redirect(url_for('uploaded_file', filename=filename2))
 
     return render_template('upload.html')
 

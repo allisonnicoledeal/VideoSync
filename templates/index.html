@@ -1,17 +1,25 @@
 <!DOCTYPE html>
 <html>
+    <head>
+    <title>Video Sync</title>
+    </head>
+
     <body>
-        <h2> {{video2.path}}{{video2.filename}}</h2>
-        <video height="200" controls="">
-            <source src= "{{ video2.path }}{{ video2.filename }}" type="video/mp4"/>
-        </video>
 
         <h2> {{video1.path}}{{video1.filename}}</h2>
-        <video height="200" controls="">
+
+        <video id="video1" class="video-js vjs-default-skin" height="200" controls preload="auto" >
             <source src= "{{ video1.path }}{{ video1.filename }}" type="video/mp4"/>
         </video>
 
+        <h2> {{video2.path}}{{video2.filename}}</h2>
+        <video id="video2" class="video-js vjs-default-skin" height="200" controls preload="auto" autoplay>
+            <source src= "{{ video2.path }}{{ video2.filename }}" type="video/mp4"/>
+        </video>
 
+        <p><a href='./upload'>Upload New Video</a>
 
-    </body>
+    <link href="http://vjs.zencdn.net/4.1/video-js.css" rel="stylesheet">
+    <script src="http://vjs.zencdn.net/4.1/video.js"></script>
+  </body>
 </html>
