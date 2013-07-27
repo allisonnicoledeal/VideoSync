@@ -34,7 +34,7 @@ def create_samples(data, num_keys):
 # Process samples by second
 # INPUT: Dictionary of seconds as keys and matrix of L R raw audio data as values
 # OUTPUT: Returns dictionary of key(frequency) value(time) pairs
-def process_second(s, num):  #, num_samp_sec):
+def process_sample(s, num):  #, num_samp_sec):
     d = {}
     # second = float(0)
 
