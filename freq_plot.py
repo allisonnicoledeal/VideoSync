@@ -19,14 +19,29 @@ def read_audio(file):
 
 
 # num_keys is number of dictionary entries per second
-def create_samples(data, num_keys):
+# def create_samples(data, num_keys):
+#     s = {}
+#     second = 0
+#     num_secs = round(len(data)/sample_rate, 0)
+#     num_keys_sec = sample_rate/num_keys
+#     for i in range(0, int(num_secs*sample_rate), num_keys_sec):
+#         s[second] = data[i:i+num_keys_sec]
+#         second += 1
+
+#     return s
+
+
+ # sample span: length of sample (44100 is one second)
+# overlap: number of data elements overlapping between samples
+def parse_samples(data, fft_bin_size, overlap):
     s = {}
-    second = 0
-    num_secs = round(len(data)/sample_rate, 0)
-    num_keys_sec = sample_rate/num_keys
-    for i in range(0, int(num_secs*sample_rate), num_keys_sec):
-        s[second] = data[i:i+num_keys_sec]
-        second += 1
+    sample_no = 0
+
+    for i in range(0, len(data), int(fft_bin_size - overlap)):
+        s[sample_no] = data[i:i + fft_bin_size]
+        print "SAMPLE NO", sample_no
+        print "SHOUD MATCH SAMPLE SPAN", len(s[sample_no])
+        sample_no += 1
 
     return s
 
@@ -34,21 +49,22 @@ def create_samples(data, num_keys):
 # Process samples by second
 # INPUT: Dictionary of seconds as keys and matrix of L R raw audio data as values
 # OUTPUT: Returns dictionary of key(frequency) value(time) pairs
-def process_sample(s, num):  #, num_samp_sec):
+def process_sample(s, num, fft_bin_size):  #, num_samp_sec):
     d = {}
-    # second = float(0)
+    second = float(0)
 
     for i in range(len(s)):  # for second in song
         mono = channel_avg(s[i])
         split = split_samples(mono, num)
         fft = fourier(split)
         max = max_freq(fft, i, num)
-        # second += float(1/num_samp_sec)
+        
+        second += float((fft_bin_size * i) - (fft_bin_size/2))
 
         if max[0] in d.keys() is not None:   # if dict key exists, append
-            d[max[0]].append(max[1])  # dict_key is max freq and dict_value is time
+            d[max[0]].append(second)  # dict_key is max freq and dict_value is time
         else:  # else create dict key and assign value
-            d[max[0]] = max[1]
+            d[max[0]] = [second]
 
     return sorted(d.items(), key=lambda x: x[1])
 
@@ -70,8 +86,8 @@ def channel_avg(raw_data_matrix):
 # Split each second into x samples !!!!!!!!! SHOULD TAKE HIGHEST INSTEAD OF AVG?
 # INPUT: list with length of sampling rate
 # OUTPUT: list with length of number of indicated samples per second
-def split_samples(mono_data, num_samp_sec):  # num samp sec is 20 if two samples per sec from create samples
-    elements_per_sample = sample_rate/num_samp_sec
+def split_samples(mono_data, num_elements_sample):  # num samp sec is 20 if two samples per sec from create samples
+    elements_per_sample = sample_rate/num_elements_sample
     sample = []
     for i in range(0, len(mono_data), (elements_per_sample)):
         added_elements = mono_data[i:i+(elements_per_sample)]
@@ -164,13 +180,13 @@ a1 = read_audio('Hiphopopotamus.wav')
 # a3 = process_second(a2, 10)
 
 # Portion of file to compare
-b1 = a1[0:44100*2]
-b2 = create_samples(b1, 2)
-b3 = process_second(b2, 10)
+# b1 = a1[0:44100*2]
+# b2 = parse_samples(b1, 1024, 1024*.75)
+# b3 = process_sample(b2, 10)
 
 c1 = a1[0:700000]
-c2 = create_samples(c1, 2)
-c3 = process_second(c2, 10)
+c2 = parse_samples(c1, 1024*2, 1024*.75*2)
+c3 = process_sample(c2, 1024)
 
 
 

@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-    <title>Video Sync</title>
+        <title>Video Sync</title>
+        <link href="http://vjs.zencdn.net/4.1/video-js.css" rel="stylesheet">
     </head>
 
     <body>
@@ -19,20 +20,31 @@
 
         <p><a href='./upload'>Upload New Video</a>
 
-
+    <script src="http://vjs.zencdn.net/4.1/video.js"></script>
     <script type="text/javascript">
     // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
-        v1 = document.getElementById('video1');
-        v2 = document.getElementById('video2');
+        var v1 = document.getElementById('video1');
+        var v2 = document.getElementById('video2');
+
+        // function  
+
         v1.load();
         v2.load();
 
-        window.setInterval(if ((v1.readyState === 4) && (v2.readyState === 4)) {
+
+        window.setInterval(function() { if ((v1.readyState === 4) && (v2.readyState === 4)) {
             v2.play()
             window.setTimeout(function() {
                 v1.play()
             }, 6000)
         }), 500)
+
+// add event listener canplaythrough, progress
+// look in course materials for reference
+// polyfill
+// popcorn js
+// video js (buffered, progress, waiting)
+// media js
 
         // v2.play();
 
