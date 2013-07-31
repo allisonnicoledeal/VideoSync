@@ -4,15 +4,17 @@
 import scipy.io.wavfile
 import numpy as np
 from subprocess import call
+import math
 # import math.floor as floor
 
 
 sample_rate = 44100
 
-def extract_audio(video_file):
-    track_name = video_file.split(".")
-    audio_output = track_name[0] + "WAV.wav"
-    audio_data = call(["avconv", "-i", video_file, "-vn", "-f", "wav", audio_output])
+# def extract_audio(video_file):
+#     track_name = video_file.split(".")
+#     audio_output = track_name[0] + "WAV.wav"
+#     audio_data = call(["avconv", "-i", video_file, "-vn", "-f", "wav", audio_output])
+
 
 
 # Read file
@@ -27,44 +29,61 @@ def read_audio(audio_file):
 # sample span: length of sample (44100 is one second)
 # overlap: number of data elements overlapping between samples
 def parse_samples(data, fft_bin_size, overlap):
-    s = {}
-
-    sample_no = 0
-    s[sample_no] = data[0:fft_bin_size]
-    sample_no += 1
-
-    for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
-        s[sample_no] = data[i:i + fft_bin_size]
-        print "SAMPLE NO", sample_no
-        print "SPAN: ", fft_bin_size
-        print "SHOUD MATCH SAMPLE SPAN", len(s[sample_no])
-        sample_no += 1
-
-    return s
-
-
-# Process samples by second
-# INPUT: Dictionary of seconds as keys and matrix of L R raw audio data as values
-# OUTPUT: Returns dictionary of key(frequency) value(time) pairs
-def process_sample(s, num, fft_bin_size):  #, num_samp_sec):
     d = {}
-    second = float(0)
 
-    for i in range(len(s)):  # for second in song
-        mono = channel_avg(s[i])
-        # split = split_samples(mono, num)
-        fft = fourier(mono)
-        max = max_freq(fft)  # (fft, i, num)
+    # process first sample
+    sample_data = data[0:fft_bin_size]
+    print 'LEN SAMPLE DATA, SHOULD BE 1024:', len(sample_data)
+    freq_max = process_sample(sample_data)
+    print 'freq max: ', freq_max
+    dict_key = round(freq_max, 2)
+    print 'dict_key: ', dict_key
+    second = float((float(fft_bin_size)/2.0)/float(sample_rate))
+    print 'second: ', second
+    dict_value = round(second, 3)
+    print 'dict value: ', dict_value
 
-        # second += float(((fft_bin_size * i) - (fft_bin_size/2))/sample_rate)
-        # FIX THIS PART!
+    if dict_key in d.keys() is not None:   # if dict key exists, append
+        d[dict_key].append(dict_value)  # dict_key is max freq and dict_value is time
+    else:  # else create dict key and assign value
+        d[dict_key] = [dict_value]
 
-        if max in d.keys() is not None:   # if dict key exists, append
-            d[max].append(second)  # dict_key is max freq and dict_value is time
+
+    # process remainder of samples
+    for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
+        print 'I: ', i
+        sample_data = data[i:i + fft_bin_size]
+        print 'LEN SAMPLE DATA, SHOULD BE 1024:', len(sample_data)
+        freq_max = process_sample(sample_data)
+        print 'freq max: ', freq_max
+        dict_key = round(freq_max, 2)
+        print 'dict_key: ', dict_key
+        second = float((float(i) + float(fft_bin_size)/2.0)/float(sample_rate))
+        print 'second: ', second
+        dict_value = round(second, 3)
+        print 'dict value: ', dict_value
+
+        if dict_key in d.keys() is not None:   # if dict key exists, append
+            d[dict_key].append(dict_value)  # dict_key is max freq and dict_value is time
         else:  # else create dict key and assign value
-            d[max] = [second]
+            d[dict_key] = [dict_value]
 
+        print 'DICT: ', d
+        print " "
+         
     return d
+ 
+# process individual sample
+def process_sample(data):
+        avg = channel_avg(data)
+        print 'LEN AVG, SHOULD BE 1024', len(avg)
+        fft = fourier(avg)
+        print "fft: ", len(fft)
+        max = max_freq(fft)
+        print 'max: ', max
+
+        return max
+
 
 
 # =================================================================
@@ -110,6 +129,7 @@ def fourier(sample):
 def max_freq(fft_abs):  #, sec, num):
     max_fft_abs = max(fft_abs)
     return max_fft_abs
+
 
 
 # Compare two value-sorted dictionary objects to see if d1 is an overlap/within d2
@@ -168,8 +188,9 @@ def compare(d1, d2, consec, err):  # start testing err value 10
 fftbin = 1024
 # Entire file
 
-sound = extract_audio("HipVsRhy.mp4")
-a1 = read_audio("HipVsRhyWAV.wav")
+# sound = extract_audio("HipVsRhy.mp4")
+# a1 = read_audio("HipVsRhyWAV.wav")
+a1 = read_audio("Hiphopopotamus.wav")
 
 # a2 = create_samples(a1, 2)
 # a3 = process_second(a2, 10)
@@ -180,10 +201,10 @@ a1 = read_audio("HipVsRhyWAV.wav")
 # b3 = process_sample(b2, 1024, 1024)
 # b4 = sorted(b3.items(), key=lambda x: x[1])
 
-c1 = a1[0:700000]
+c1 = a1[0:1024*4]
 c2 = parse_samples(c1, 1024, 1024*.75)
-c3 = process_sample(c2, 1024, 1024)
-c4 = sorted(c3.items(), key=lambda x: x[1])
+# c3 = process_sample(c2, 1024, 1024)
+c4 = sorted(c2.items(), key=lambda x: x[1])
 
 
 
