@@ -3,43 +3,40 @@
 
 import scipy.io.wavfile
 import numpy as np
+from subprocess import call
 # import math.floor as floor
 
 
 sample_rate = 44100
 
+def extract_audio(video_file):
+    track_name = video_file.split(".")
+    audio_output = track_name[0] + "WAV.wav"
+    audio_data = call(["avconv", "-i", video_file, "-vn", "-f", "wav", audio_output])
+
 
 # Read file
 # INPUT: Audio file
 # OUTPUT: Sets sample rate of wav file, Returns data read from wav file (numpy array of integers)
-def read_audio(file):
-    rate, data = scipy.io.wavfile.read(file)  # Return the sample rate (in samples/sec) and data from a WAV file
+def read_audio(audio_file):
+    rate, data = scipy.io.wavfile.read(audio_file)  # Return the sample rate (in samples/sec) and data from a WAV file
     print "RATE: ", rate
     return data
 
 
-# num_keys is number of dictionary entries per second
-# def create_samples(data, num_keys):
-#     s = {}
-#     second = 0
-#     num_secs = round(len(data)/sample_rate, 0)
-#     num_keys_sec = sample_rate/num_keys
-#     for i in range(0, int(num_secs*sample_rate), num_keys_sec):
-#         s[second] = data[i:i+num_keys_sec]
-#         second += 1
-
-#     return s
-
-
- # sample span: length of sample (44100 is one second)
+# sample span: length of sample (44100 is one second)
 # overlap: number of data elements overlapping between samples
 def parse_samples(data, fft_bin_size, overlap):
     s = {}
-    sample_no = 0
 
-    for i in range(0, len(data), int(fft_bin_size - overlap)):
+    sample_no = 0
+    s[sample_no] = data[0:fft_bin_size]
+    sample_no += 1
+
+    for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
         s[sample_no] = data[i:i + fft_bin_size]
         print "SAMPLE NO", sample_no
+        print "SPAN: ", fft_bin_size
         print "SHOUD MATCH SAMPLE SPAN", len(s[sample_no])
         sample_no += 1
 
@@ -55,18 +52,19 @@ def process_sample(s, num, fft_bin_size):  #, num_samp_sec):
 
     for i in range(len(s)):  # for second in song
         mono = channel_avg(s[i])
-        split = split_samples(mono, num)
-        fft = fourier(split)
-        max = max_freq(fft, i, num)
-        
-        second += float((fft_bin_size * i) - (fft_bin_size/2))
+        # split = split_samples(mono, num)
+        fft = fourier(mono)
+        max = max_freq(fft)  # (fft, i, num)
 
-        if max[0] in d.keys() is not None:   # if dict key exists, append
-            d[max[0]].append(second)  # dict_key is max freq and dict_value is time
+        # second += float(((fft_bin_size * i) - (fft_bin_size/2))/sample_rate)
+        # FIX THIS PART!
+
+        if max in d.keys() is not None:   # if dict key exists, append
+            d[max].append(second)  # dict_key is max freq and dict_value is time
         else:  # else create dict key and assign value
-            d[max[0]] = [second]
+            d[max] = [second]
 
-    return sorted(d.items(), key=lambda x: x[1])
+    return d
 
 
 # =================================================================
@@ -86,15 +84,15 @@ def channel_avg(raw_data_matrix):
 # Split each second into x samples !!!!!!!!! SHOULD TAKE HIGHEST INSTEAD OF AVG?
 # INPUT: list with length of sampling rate
 # OUTPUT: list with length of number of indicated samples per second
-def split_samples(mono_data, num_elements_sample):  # num samp sec is 20 if two samples per sec from create samples
-    elements_per_sample = sample_rate/num_elements_sample
-    sample = []
-    for i in range(0, len(mono_data), (elements_per_sample)):
-        added_elements = mono_data[i:i+(elements_per_sample)]
-        sample_avg = sum(added_elements)/len(added_elements)
-        sample.append(sample_avg)
+# def split_samples(mono_data, num_elements_sample):  # num samp sec is 20 if two samples per sec from create samples
+#     elements_per_sample = sample_rate/num_elements_sample
+#     sample = []
+#     for i in range(0, len(mono_data), (elements_per_sample)):
+#         added_elements = mono_data[i:i+(elements_per_sample)]
+#         sample_avg = sum(added_elements)/len(added_elements)
+#         sample.append(sample_avg)
 
-    return sample
+#     return sample
 
 
 # Compute the one-dimensional discrete Fourier Transform
@@ -108,17 +106,10 @@ def fourier(sample):
 
 # Add max freq in a given second-long sample to time-freq table
 # INPUT: Dict and list of fourier transform results, with len of num samples per second
-# OUTPUT: None, adds key-value pair to dictionary
-def max_freq(fft_abs, sec, num):
+# OUTPUT: value of maximum frequency
+def max_freq(fft_abs):  #, sec, num):
     max_fft_abs = max(fft_abs)
-    dict_value = None
-    for i in range(len(fft_abs)):  # Need to find which 1/10th of sec highest freq occurs
-        if fft_abs[i] == max_fft_abs:
-            portion_of_sec = round((float(i)/float(num)), 2)
-            dict_value = float(sec) + portion_of_sec
-
-    dict_key = round(max_fft_abs, 2)  # Round freq to 2 decimal places
-    return (dict_key, dict_value)
+    return max_fft_abs
 
 
 # Compare two value-sorted dictionary objects to see if d1 is an overlap/within d2
@@ -158,7 +149,7 @@ def compare(d1, d2, consec, err):  # start testing err value 10
             print 'MATCH NOT FOUND, INCREASE I, RESET J AND OFFSET'
             if prev_match is False:
                 i += 1
-            
+     
             j = 0
             time_offset = None
             prev_match = False
@@ -174,19 +165,25 @@ def compare(d1, d2, consec, err):  # start testing err value 10
 
 
 # Test
+fftbin = 1024
 # Entire file
-a1 = read_audio('Hiphopopotamus.wav')
+
+sound = extract_audio("HipVsRhy.mp4")
+a1 = read_audio("HipVsRhyWAV.wav")
+
 # a2 = create_samples(a1, 2)
 # a3 = process_second(a2, 10)
 
 # Portion of file to compare
 # b1 = a1[0:44100*2]
 # b2 = parse_samples(b1, 1024, 1024*.75)
-# b3 = process_sample(b2, 10)
+# b3 = process_sample(b2, 1024, 1024)
+# b4 = sorted(b3.items(), key=lambda x: x[1])
 
 c1 = a1[0:700000]
-c2 = parse_samples(c1, 1024*2, 1024*.75*2)
-c3 = process_sample(c2, 1024)
+c2 = parse_samples(c1, 1024, 1024*.75)
+c3 = process_sample(c2, 1024, 1024)
+c4 = sorted(c3.items(), key=lambda x: x[1])
 
 
 
