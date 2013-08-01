@@ -17,9 +17,10 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    video1 = model.session.query(model.Track).get(1)
-    video2 = model.session.query(model.Track).get(2)
-    return render_template("index.html", video1=video1, video2=video2)
+    # video1 = model.session.query(model.Track).get(1)
+    # video2 = model.session.query(model.Track).get(2)
+    # return render_template("index.html", video1=video1, video2=video2)
+    return render_template("index_ryan.html")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
