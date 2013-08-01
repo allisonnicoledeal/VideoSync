@@ -14,6 +14,9 @@ sample_rate = 44100
 # Extract audio from video file, save as wav auido file
 # INPUT: Video file
 # OUTPUT: Does not return any values, but saves audio as wav file
+
+# mp4 to webm: avconv -i ./static/videos/Business.mp4 -y BusinessWEBM.webm
+
 def extract_audio(video_file):
     track_name = video_file.split(".")
     audio_output = track_name[0] + "WAV.wav"
@@ -196,9 +199,15 @@ c0 = read_audio("HipVsRhyWAV.wav")
 c1 = c0[20000:40000]
 c2 = process_audio(c1, 1024, 1024/8)
 
-plt.plot(c2.values(), c2.keys())
+# plt.plot(c2.values(), c2.keys())
+# plt.show()
 
 
 
 # compare(a3, b3, 3, 300)
 
+dkeys = []
+dvalues = d.values()
+for i in range(len(d)):
+    length = len(d.values())
+    length * (dkeys.append(d[i]))

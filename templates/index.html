@@ -10,17 +10,24 @@
         <h2> {{video1.path}}{{video1.filename}}</h2>
 
         <video id="video1" class="video-js vjs-default-skin" mediaGroup="1"   height="200" controls preload="auto">
+            <source src= "static/videos/BusWEBM.webm" type="video/webm"/>
             <source src= "{{ video1.path }}{{ video1.filename }}" type="video/mp4"/>
+
         </video>
 
         <h2> {{video2.path}}{{video2.filename}}</h2>
         <video id="video2" class="video-js vjs-default-skin" mediaGroup="2"  height="200" controls preload="auto" >
+            <source src= "static/videos/HipVsRhyWEBM.webm" type="video/webm"/>
             <source src= "{{ video2.path }}{{ video2.filename }}" type="video/mp4"/>
+
         </video>
+
+        <button id="playAll">Play</button>
 
         <p><a href='./upload'>Upload New Video</a>
 
     <script src="http://vjs.zencdn.net/4.1/video.js"></script>
+    <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
     <script type="text/javascript">
     // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
         var v1 = document.getElementById('video1');
@@ -32,12 +39,7 @@
         v2.load();
 
 
-        window.setInterval(function() { if ((v1.readyState === 4) && (v2.readyState === 4)) {
-            v2.play()
-            window.setTimeout(function() {
-                v1.play()
-            }, 6000)
-        }), 500)
+
 
 // add event listener canplaythrough, progress
 // look in course materials for reference
@@ -52,6 +54,20 @@
 
             // }, {{video2.milisecondDelay}})
  //       }
+        var playButton = $("#playAll");
+        playButton.on("click", function() {
+            console.log("CLICKED!");
+            console.log(v1.readyState);
+            console.log(v2.readyState);
+        
+            if ((v1.readyState === 4) && (v2.readyState === 4)) {
+                v2.play()
+                window.setTimeout(function() {
+                    v1.play()
+                }, 6000);
+            }
+        });
+
     </script>
   </body>
 </html>
