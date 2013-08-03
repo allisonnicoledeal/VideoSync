@@ -10,19 +10,25 @@
         <h2> {{video1.path}}{{video1.filename}}</h2>
 
         <video id="video1" class="video-js vjs-default-skin" mediaGroup="1"   height="200" controls preload="auto">
+            <source src="http://s3.amazonaws.com/dev-files.launchpadtoys.com/18387-4f9314f6523e4/toontastic-cartoon.mov" type="video/mp4" />
             <source src= "static/videos/BusWEBM.webm" type="video/webm"/>
-            <source src= "{{ video1.path }}{{ video1.filename }}" type="video/mp4"/>
-
+<!--             <source src= "{{ video1.path }}{{ video1.filename }}" type="video/mp4"/>
+ -->
         </video>
 
         <h2> {{video2.path}}{{video2.filename}}</h2>
         <video id="video2" class="video-js vjs-default-skin" mediaGroup="2"  height="200" controls preload="auto" >
+
+                        <source src="http://s3.amazonaws.com/dev-files.launchpadtoys.com/18387-4f9314f6523e4/toontastic-cartoon.mov" type="video/mp4" />
             <source src= "static/videos/HipVsRhyWEBM.webm" type="video/webm"/>
-            <source src= "{{ video2.path }}{{ video2.filename }}" type="video/mp4"/>
+            
+ <!-- <source src= "{{ video2.path }}{{ video2.filename }}" type="video/mp4"/> -->
 
         </video>
 
         <button id="playAll">Play</button>
+        <button id="pauseAll">Pause</button>
+
 
         <p><a href='./upload'>Upload New Video</a>
 
@@ -33,11 +39,34 @@
         var v1 = document.getElementById('video1');
         var v2 = document.getElementById('video2');
 
-        // function  
-
         v1.load();
         v2.load();
 
+        var playButton = $("#playAll");
+        playButton.on("click", function() {
+            console.log("CLICKED!");
+            console.log(v1.readyState);
+            console.log(v2.readyState);
+        
+            if ((v1.readyState === 4) && (v2.readyState === 4)) {
+                v2.play()
+                if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
+                    window.setTimeout(function() {
+                        v1.play()
+                    }, 6000);
+                }
+                else {
+                    v1.play()
+                }
+            }
+        });
+
+        var pauseButton = $("#pauseAll");
+        pauseButton.on("click", function() {
+            console.log("PAUSE CLICKED!");
+            v1.pause()
+            v2.pause()
+        });
 
 
 
@@ -48,25 +77,8 @@
 // video js (buffered, progress, waiting)
 // media js
 
-        // v2.play();
 
 
-
-            // }, {{video2.milisecondDelay}})
- //       }
-        var playButton = $("#playAll");
-        playButton.on("click", function() {
-            console.log("CLICKED!");
-            console.log(v1.readyState);
-            console.log(v2.readyState);
-        
-            if ((v1.readyState === 4) && (v2.readyState === 4)) {
-                v2.play()
-                window.setTimeout(function() {
-                    v1.play()
-                }, 6000);
-            }
-        });
 
     </script>
   </body>

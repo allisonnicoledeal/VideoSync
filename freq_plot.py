@@ -15,7 +15,6 @@ sample_rate = 44100
 # INPUT: Video file
 # OUTPUT: Does not return any values, but saves audio as wav file
 
-# mp4 to webm: avconv -i ./static/videos/Business.mp4 -y BusinessWEBM.webm
 
 def extract_audio(video_file):
     track_name = video_file.split(".")
@@ -181,8 +180,8 @@ def compare(d1, d2, consec, err):  # start testing err value 10
 fftbin = 1024
 # Entire file
 
-sound = extract_audio("HipVsRhy.mp4")
-a1 = read_audio("HipVsRhyWAV.wav")
+# sound = extract_audio("HipVsRhy.mp4")
+# a1 = read_audio("HipVsRhyWAV.wav")
 # a1 = read_audio("Hiphopopotamus.wav")
 # a2 = create_samples(a1, 2)
 # a3 = process_second(a2, 10)
@@ -194,10 +193,10 @@ b1 = b0[23000:39000]
 b2 = process_audio(b1, 1024, 1024/8)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
 
-soundc = extract_audio("HipVsRhy.mp4")
-c0 = read_audio("HipVsRhyWAV.wav")
-c1 = c0[20000:40000]
-c2 = process_audio(c1, 1024, 1024/8)
+# soundc = extract_audio("HipVsRhy.mp4")
+# c0 = read_audio("HipVsRhyWAV.wav")
+# c1 = c0[20000:40000]
+# c2 = process_audio(c1, 1024, 1024/8)
 
 # plt.plot(c2.values(), c2.keys())
 # plt.show()
@@ -206,8 +205,9 @@ c2 = process_audio(c1, 1024, 1024/8)
 
 # compare(a3, b3, 3, 300)
 
-dkeys = []
-dvalues = d.values()
-for i in range(len(d)):
-    length = len(d.values())
-    length * (dkeys.append(d[i]))
+# compare two dictionaries
+# dkeys = []
+# dvalues = d.values()
+# for i in range(len(d)):
+#     length = len(d.values())
+#     length * (dkeys.append(d[i]))

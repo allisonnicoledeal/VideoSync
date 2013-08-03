@@ -26,6 +26,7 @@ class Track(Base):
     length = Column(Integer, nullable=True)
     date_uploaded = Column(DateTime, nullable=True)
     path = Column(String(128), nullable=True)
+    filename_webm = Column(String(64), nullable=True)
 
     # analyses_track
 

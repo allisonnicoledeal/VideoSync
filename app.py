@@ -2,6 +2,8 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
 from werkzeug import secure_filename
 import model
+import convert_to_webm
+
 
 UPLOAD_FOLDER = 'uploads/'
 ALLOWED_EXTENSIONS = set(['mp4'])
@@ -17,10 +19,10 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # video1 = model.session.query(model.Track).get(1)
-    # video2 = model.session.query(model.Track).get(2)
-    # return render_template("index.html", video1=video1, video2=video2)
-    return render_template("index_ryan.html")
+    video1 = model.session.query(model.Track).get(1)
+    video2 = model.session.query(model.Track).get(2)
+    return render_template("index.html", video1=video1, video2=video2)
+    # return render_template("index_ryan.html")
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -38,13 +40,16 @@ def upload_file():
             new_artist = request.form.get("artist")
             new_event = request.form.get("event")
             new_path = "static/videos/"
+            # new_filename_webm = 
             new_file1 = model.Track(title=new_title, filename=new_filename1,
-                                    artist=new_artist, event=new_event, path=new_path)
+                                    artist=new_artist, event=new_event, path=new_path,
+                                    filename_webm=new_filename_webm)
             model.session.add(new_file1)
 
             new_filename2 = filename2
             new_file2 = model.Track(title=new_title, filename=new_filename2,
-                                    artist=new_artist, event=new_event, path=new_path)
+                                    artist=new_artist, event=new_event, path=new_path,
+                                    filename_webm=new_filename_webm)
             model.session.add(new_file2)
 
             model.session.commit()
