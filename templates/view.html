@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Video Sync</title>
+    </head>
+
+    <body>
+
+
+        <h2> List of Events </h2> <br>
+        {% for group in groups %}
+            <h3>Group:{{group.id}}</h3>
+            {% for analysis in group.analysis_group %}
+                <h4>Sync Point:{{analysis.sync_point}}</h4>
+                <h4>Track:{{analysis.analysis_track.filename}}</h4>
+            {% endfor %}
+<!--             <form action="./view_event">
+                <input type="hidden" name="group_id" value="{{group.id}}">
+                <input type="submit" value="View">
+            </form> -->
+            <a href="/view_event?group_id={{group.id}}">View video group {{group.id}}</a>
+            <br/>
+            <br/>
+        {% endfor %}
+
+
+    </body>
+
+</html>

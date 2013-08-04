@@ -52,7 +52,6 @@ def process_audio(data, fft_bin_size, overlap):
 
     # process remainder of samples
     for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
-        print 'I: ', i
         sample_data = data[i:i + fft_bin_size]
         if (len(sample_data) == fft_bin_size):
             freq_max = process_sample(sample_data)
@@ -123,8 +122,37 @@ def fourier(sample): #, overlap):
 
     return freq_hz
 
+# Plot time vs freq
+def plot_d(dict):
+    x = []
+    y = []
 
-# Compare two value-sorted dictionary objects to see if d1 is an overlap/within d2
+    for item in dict.items():
+        for i in range(len(item[1])):
+            x.append(item[1][i])
+            y.append(item[0])
+
+    plt.plot(x, y, 'ro')
+    plt.xlabel('Time')
+    plt.ylabel('Frequency')
+    plt.show()
+
+
+def pairs(d):
+    tf_pairs = []
+
+    for item in d.items():
+        for i in range(len(item[1])):
+            tf_pairs.append((item[0], item[1][i]))
+
+    return sorted(tf_pairs, key=lambda tup:tup[1])
+
+# def align(tfpairs1, tfpairs2):
+#     match = False
+
+#     for
+
+# Compare two value-sorted dictionary objects to see if d1 starts within d2
 # INPUT: Two dictionaries, number of consecutive matches to be considered
     # a match, error margin
 # OUTPUT: True if match, False if no match
@@ -142,20 +170,20 @@ def compare(d1, d2, consec, err):  # start testing err value 10
             print "J = 0. TIME OFFSET: ", time_offset
 
         freq_delta = abs(d1[i][0]-d2[j][0])
-        # print "FREQ DELTA: ", freq_delta
+        print "FREQ DELTA: ", freq_delta
         time_delta = abs(d1[i][1]-d2[j][1])
-        # print "TIME DELTA: ", time_delta
+        print "TIME DELTA: ", time_delta
 
         if ((freq_delta <= err) and ((time_delta-time_offset) <= 1.0)):  # if potential match (freq err is < given and time offset aligns)
-            # print "FREQ DELTA ERR SMALL AND TIME OFFSET MATCH"
+            print "FREQ DELTA ERR SMALL AND TIME OFFSET MATCH"
 
             time_offset = time_delta
-            # print 'TIME OFFSET: ', time_offset
-            # print ""
+            print 'TIME OFFSET: ', time_offset
+            print ""
             i += 1  # go to next index to check if next items match
             j += 1
             prev_match = True
-            # print "PREV MATCH: ", prev_match
+            print "PREV MATCH: ", prev_match
 
         else:  # reset d2 counter and time offest if match not found
             # print 'MATCH NOT FOUND, INCREASE I, RESET J AND OFFSET'
@@ -169,11 +197,11 @@ def compare(d1, d2, consec, err):  # start testing err value 10
             print ""
 
         if j == consec:
-            # print consec, "CONSECUTIVE MATCHES FOUND"
-            return True
+            print consec, "CONSECUTIVE MATCHES FOUND"
+            return time_delta
 
-    # print consec, 'CONSEC MATCHES NOT FOUND'
-    return False
+    print consec, 'CONSEC MATCHES NOT FOUND'
+    return None
 
 
 # Test
@@ -187,23 +215,35 @@ fftbin = 1024
 # a3 = process_second(a2, 10)
 
 # Portion of file to compare
-soundb = extract_audio("HipVsRhy.mp4")
-b0 = read_audio("HipVsRhyWAV.wav")
-b1 = b0[23000:39000]
+soundb = extract_audio("Business.mp4")
+b0 = read_audio("BusinessWAV.wav")
+b1 = b0[100000:120000]
 b2 = process_audio(b1, 1024, 1024/8)
+b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
+# plot_d(b2)
 
-# soundc = extract_audio("HipVsRhy.mp4")
-# c0 = read_audio("HipVsRhyWAV.wav")
-# c1 = c0[20000:40000]
-# c2 = process_audio(c1, 1024, 1024/8)
-
-# plt.plot(c2.values(), c2.keys())
-# plt.show()
-
+soundc = extract_audio("Business.mp4")
+c0 = read_audio("BusinessWAV.wav")
+c1 = c0[95000:121000]
+c2 = process_audio(c1, 1024, 1024/8)
+c3 = pairs(c2)
+# plot_d(c2)
 
 
-# compare(a3, b3, 3, 300)
+r2 = process_audio(b1, 1024, 1024*0)
+r3 = pairs(r2)
+s2 = process_audio(c1, 1024, 1024*0)
+s3 = pairs(s2)
+
+y2 = process_audio(b1, 1024, 1024*.75)
+y3 = pairs(y2)
+z2 = process_audio(c1, 1024, 1024*.75)
+z3 = pairs(z2)
+
+
+
+# compare(c3, b3, 5, 20)
 
 # compare two dictionaries
 # dkeys = []
@@ -211,3 +251,7 @@ b2 = process_audio(b1, 1024, 1024/8)
 # for i in range(len(d)):
 #     length = len(d.values())
 #     length * (dkeys.append(d[i]))
+
+
+
+

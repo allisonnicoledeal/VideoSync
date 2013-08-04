@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Video Sync</title>
+    </head>
+
+    <body>
+
+
+        <h2> View EVENT </h2> <br>
+        <h2> {{video_group.id}} </h2> <br>
+
+        {% for group in groups %}
+            <h3>Group:{{group.id}}</h3>
+            {% for analysis in group.analysis_group %}
+                <h4>Sync Point:{{analysis.sync_point}}</h4>
+                <h4>Track:{{analysis.analysis_track.filename}}</h4>
+            {% endfor %}
+            <a href="/view_event?group_id={{group.id}}">View video group {{group.id}}</a>
+            <br>
+            <br>
+        {% endfor %}
+
+        <h2> Group: {{video_group.id}}</h2>
+
+        {% for video in video_group.analysis_group %}
+            <h2> {{video.analysis_track.path}}{{video.analysis_track.filename}}</h2>
+            <h2> trackid:{{video.analysis_track.filename}} </h2>
+            <video id={{video.analysis_track.filename}} height="200" controls preload="auto">
+                <source src= {{video.analysis_track.path}}{{video.analysis_track.filename}} type="video/mp4"/>
+                <source src= {{video.analysis_track.path}}{{video.analysis_track.filename_webm}} type="video/webm"/>
+            </video>
+
+        {% endfor %}
+
+
+        <button id="playAll">Play</button>
+        <button id="pauseAll">Pause</button>
+
+        <script src="http://vjs.zencdn.net/4.1/video.js"></script>
+        <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+        <script type="text/javascript">
+        // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
+            var v1 = document.getElementById('HipVsRhy.mp4');
+            var v2 = document.getElementById('HipClip.mp4');
+
+            v1.load();
+            v2.load();
+
+            var playButton = $("#playAll");
+            playButton.on("click", function() {
+                console.log("CLICKED!");
+                console.log(v1.readyState);
+                console.log(v2.readyState);
+            
+                if ((v1.readyState === 4) && (v2.readyState === 4)) {
+                    v1.play()
+                    if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
+                        window.setTimeout(function() {
+                            v2.play()
+                        }, 13500);
+                    }
+                    else {
+                        v2.play()
+                    }
+                }
+            });
+
+            var pauseButton = $("#pauseAll");
+            pauseButton.on("click", function() {
+                console.log("PAUSE CLICKED!");
+                v1.pause()
+                v2.pause()
+            });
+
+            </script>
+
+
+    </body>
+
+</html>
