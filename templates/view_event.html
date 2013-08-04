@@ -26,11 +26,10 @@
         {% for video in video_group.analysis_group %}
             <h2> {{video.analysis_track.path}}{{video.analysis_track.filename}}</h2>
             <h2> trackid:{{video.analysis_track.filename}} </h2>
-            <video id={{video.analysis_track.filename}} height="200" controls preload="auto">
+            <video id={{video.analysis_track.filename}} height="200" controls preload="auto" delay="{{video.sync_point}}">
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename}} type="video/mp4"/>
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename_webm}} type="video/webm"/>
             </video>
-
         {% endfor %}
 
 
@@ -58,7 +57,7 @@
                     if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
                         window.setTimeout(function() {
                             v2.play()
-                        }, 13500);
+                        }, 15000); //v2.delay());   how to execute delay without using an attribute?
                     }
                     else {
                         v2.play()

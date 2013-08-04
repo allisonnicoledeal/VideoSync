@@ -38,33 +38,33 @@ def upload_file():
             file1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
             file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
 
-
-
             # save files info in db
             # save file 1
             new_filename1 = filename1
             new_title = request.form.get("title")
             new_artist = request.form.get("artist")
             new_event = request.form.get("event")
-            new_path = "static/videos/"
-            new_filename_webm1 = "webmfilename"
+            new_path = UPLOAD_FOLDER
+            new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
             new_file1 = model.Track(title=new_title, filename=new_filename1,
                                     artist=new_artist, event=new_event, path=new_path,
                                     filename_webm=new_filename_webm1)
-    
             model.session.add(new_file1)
 
-            # save file 1
+            # save file 2
             new_filename2 = filename2
-            new_filename_webm2 = "webmfilename"
+            new_filename_webm2 = convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
             new_file2 = model.Track(title=new_title, filename=new_filename2,
                                     artist=new_artist, event=new_event, path=new_path,
                                     filename_webm=new_filename_webm2)
             model.session.add(new_file2)
 
-            # do analysis here
-
             model.session.commit()
+
+            # analyze file
+
+
+
 
             return redirect('/view')
 
