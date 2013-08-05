@@ -46,7 +46,8 @@ def upload_file():
             new_artist = request.form.get("artist")
             new_event = request.form.get("event")
             new_path = UPLOAD_FOLDER
-            new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
+            # new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
+            new_filename_webm1 = "webmfilename"
             new_file1 = model.Track(title=new_title, filename=new_filename1,
                                     artist=new_artist, event=new_event, path=new_path,
                                     filename_webm=new_filename_webm1)
@@ -54,7 +55,8 @@ def upload_file():
 
             # save file 2
             new_filename2 = filename2
-            new_filename_webm2 = convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
+            # new_filename_webm2 = convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
+            new_filename_webm2 = "webmfilename"
             new_file2 = model.Track(title=new_title, filename=new_filename2,
                                     artist=new_artist, event=new_event, path=new_path,
                                     filename_webm=new_filename_webm2)
@@ -68,16 +70,19 @@ def upload_file():
             new_group = model.Group(timestamp=new_timestamp)
             model.session.add(new_group)
 
+            model.session.flush()
+
+
             # save analysis into db
-            new_group_id = 100  # how to automate this part
-            new_track_id1 = 100  # get this from above info?
-            new_sync_point1 = 100
+            new_group_id = new_group.id  # how to automate this part
+            new_track_id1 = new_file1.id  # get this from above info?
+            new_sync_point1 = 99999
             new_analysis1 = model.Analysis(group_id=new_group_id, track_id=new_track_id1,
                                            sync_point=new_sync_point1)
             model.session.add(new_analysis1)
 
-            new_track_id2 = 200  # how to automate this part
-            new_sync_point2 = 200  # get this from above info?
+            new_track_id2 = new_file2.id  # how to automate this part
+            new_sync_point2 = 99999  # get this from above info?
             new_analysis2 = model.Analysis(group_id=new_group_id, track_id=new_track_id2,
                                            sync_point=new_sync_point2)
             model.session.add(new_analysis2)

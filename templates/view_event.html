@@ -26,51 +26,84 @@
         {% for video in video_group.analysis_group %}
             <h2> {{video.analysis_track.path}}{{video.analysis_track.filename}}</h2>
             <h2> trackid:{{video.analysis_track.filename}} </h2>
-            <video id={{video.analysis_track.filename}} height="200" controls preload="auto" delay="{{video.sync_point}}">
+            <video id="video-{{loop.index}}" height="200" controls preload="auto" data-sync-point="{{video.sync_point}}" data-status="notPLaying">
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename}} type="video/mp4"/>
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename_webm}} type="video/webm"/>
             </video>
         {% endfor %}
 
 
-        <button id="playAll">Play</button>
-        <button id="pauseAll">Pause</button>
+        <button id="playAll" disabled>Play</button>
+        <button id="pauseAll" disabled>Pause</button>
 
         <script src="http://vjs.zencdn.net/4.1/video.js"></script>
         <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
         <script type="text/javascript">
         // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
-            var v1 = document.getElementById('HipVsRhy.mp4');
-            var v2 = document.getElementById('HipClip.mp4');
 
-            v1.load();
-            v2.load();
+var v1, v2, playButton, pauseButton;
 
-            var playButton = $("#playAll");
-            playButton.on("click", function() {
-                console.log("CLICKED!");
-                console.log(v1.readyState);
-                console.log(v2.readyState);
-            
-                if ((v1.readyState === 4) && (v2.readyState === 4)) {
-                    v1.play()
-                    if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
-                        window.setTimeout(function() {
-                            v2.play()
-                        }, 15000); //v2.delay());   how to execute delay without using an attribute?
-                    }
-                    else {
-                        v2.play()
-                    }
-                }
-            });
+function init() {
+    v1 = $('#video-1');
+    v2 = $('#video-2');
+    playButton = $("#playAll");
+    pauseButton = $("#pauseAll");
 
-            var pauseButton = $("#pauseAll");
-            pauseButton.on("click", function() {
-                console.log("PAUSE CLICKED!");
-                v1.pause()
-                v2.pause()
-            });
+    v1.on("canplaythrough", onPlayThrough);
+    v2.on("canplaythrough", onPlayThrough);
+
+    v1[0].load();  // 0 index to to access DOM element of jquery collection
+    v2[0].load();
+
+    playButton.on("click", onPlayClick);
+    pauseButton.on("click", onPauseClick);
+
+}
+
+function onPlayThrough(event) {
+    var video = event.currentTarget;
+    video.readyToPlayNow = true;
+    if (v1.readyToPlayNow && v2.readyToPlayNow) {
+        playButton.removeAttr('disabled');
+        pauseButton.removeAttr('disabled');
+    }
+}
+  
+
+function onPlayClick(event) {
+    var vFirst, vSecond;
+
+    if (Number(v1.attr('data-sync-point')) > Number(v2.attr('data-sync-point'))) {
+        vFirst = v2;
+        vSecond = v1;
+    } else {
+        vFirst = v1;
+        vSecond = v2
+    }
+
+    //event listener
+    vFirst.on("timeupdate", function() {
+        if ((vFirst[0].currentTime*1000 >= vSecond.attr('data-sync-point')) { // &&(vSecond.attr('data-status') == 'notPLaying')){ 
+            vSecond[0].play();
+            console.log('VIDEO PLAYING')
+            vSecond.attr('data-status', "playing");
+        }
+    })
+    vFirst[0].play();
+    vFirst.attr('data-status', 'playing');
+}
+
+          
+function onPauseClick(event) {
+    console.log('before v1 pause');
+    v1[0].pause(); 
+    console.log('before v2 pause');
+    v2[0].pause();
+    // document.getElementById('video-2').pause();
+    // $('#video-2').get(0).pause()
+}         
+
+init();
 
             </script>
 
