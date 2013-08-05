@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, redirect, url_for, send_from_
 from werkzeug import secure_filename
 import model
 import convert_to_webm as convert
+import datetime
 
 
 UPLOAD_FOLDER = 'uploads/'
@@ -59,11 +60,30 @@ def upload_file():
                                     filename_webm=new_filename_webm2)
             model.session.add(new_file2)
 
+
+            # analyze files
+
+            # save group info into db
+            new_timestamp = datetime.datetime.now()
+            new_group = model.Group(timestamp=new_timestamp)
+            model.session.add(new_group)
+
+            # save analysis into db
+            new_group_id = 100  # how to automate this part
+            new_track_id1 = 100  # get this from above info?
+            new_sync_point1 = 100
+            new_analysis1 = model.Analysis(group_id=new_group_id, track_id=new_track_id1,
+                                           sync_point=new_sync_point1)
+            model.session.add(new_analysis1)
+
+            new_track_id2 = 200  # how to automate this part
+            new_sync_point2 = 200  # get this from above info?
+            new_analysis2 = model.Analysis(group_id=new_group_id, track_id=new_track_id2,
+                                           sync_point=new_sync_point2)
+            model.session.add(new_analysis2)
+
+
             model.session.commit()
-
-            # analyze file
-
-
 
 
             return redirect('/view')

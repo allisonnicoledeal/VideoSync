@@ -12,5 +12,6 @@ def convert_video(mp4_video, dir):
     input = "./" + dir + mp4_video
     output = "./" + dir + webm_output
     call(["avconv", "-i", input, "-y", output])  # generate webm file (-y: does not prompt for file overwrite)
+    # call(["avconv", "-i", input, " ", output])  # generate webm file (-y: does not prompt for file overwrite)
     print "!!!!!!!!!!!!! CONVERT VIDEO WORKED"
     return webm_output

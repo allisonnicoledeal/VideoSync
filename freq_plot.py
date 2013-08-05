@@ -217,7 +217,7 @@ fftbin = 1024
 # Portion of file to compare
 soundb = extract_audio("Business.mp4")
 b0 = read_audio("BusinessWAV.wav")
-b1 = b0[100000:120000]
+b1 = b0[95000:120000]
 b2 = process_audio(b1, 1024, 1024/8)
 b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
@@ -225,7 +225,7 @@ b3 = pairs(b2)
 
 soundc = extract_audio("Business.mp4")
 c0 = read_audio("BusinessWAV.wav")
-c1 = c0[95000:121000]
+c1 = c0[100000:120000]
 c2 = process_audio(c1, 1024, 1024/8)
 c3 = pairs(c2)
 # plot_d(c2)
@@ -236,9 +236,9 @@ r3 = pairs(r2)
 s2 = process_audio(c1, 1024, 1024*0)
 s3 = pairs(s2)
 
-y2 = process_audio(b1, 1024, 1024*.75)
+y2 = process_audio(b1, 1024, 1024*.9)
 y3 = pairs(y2)
-z2 = process_audio(c1, 1024, 1024*.75)
+z2 = process_audio(c1, 1024, 1024*.9)
 z3 = pairs(z2)
 
 
