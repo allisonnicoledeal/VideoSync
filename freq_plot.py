@@ -7,6 +7,8 @@ import numpy as np
 from subprocess import call
 import math
 import matplotlib.pyplot as plt
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 
 sample_rate = 44100
@@ -91,7 +93,7 @@ def channel_avg(raw_data_matrix):
     return data_channel_avg
 
 
-# Split each second into x samples !!!!!!!!! SHOULD TAKE HIGHEST INSTEAD OF AVG?
+# Split each second into x samples
 # INPUT: list with length of sampling rate
 # OUTPUT: list with length of number of indicated samples per second
 # def split_samples(mono_data, num_elements_sample):  # num samp sec is 20 if two samples per sec from create samples
@@ -215,17 +217,17 @@ fftbin = 1024
 # a3 = process_second(a2, 10)
 
 # Portion of file to compare
-soundb = extract_audio("Business.mp4")
-b0 = read_audio("BusinessWAV.wav")
-b1 = b0[95000:120000]
+soundb = extract_audio("Gold.mp4")
+b0 = read_audio("GoldWAV.wav")
+b1 = b0[0:100000]
 b2 = process_audio(b1, 1024, 1024/8)
 b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
 # plot_d(b2)
 
-soundc = extract_audio("Business.mp4")
-c0 = read_audio("BusinessWAV.wav")
-c1 = c0[100000:120000]
+# soundc = extract_audio("HipVsRhy.mp4")
+c0 = read_audio("HipVsRhyWAV.wav")
+c1 = c0[0:100000]
 c2 = process_audio(c1, 1024, 1024/8)
 c3 = pairs(c2)
 # plot_d(c2)
@@ -253,5 +255,38 @@ z3 = pairs(z2)
 #     length * (dkeys.append(d[i]))
 
 
+def letters_dict(dict):
+    # unique_freqs = len(dict)
+    letters = {}
+
+    char_index = 65
+
+    for dict_key in dict.keys():
+        if dict_key not in letters.keys():
+            letters[dict_key] = chr(char_index)
+            print 'value: ', letters[dict_key]
+            char_index += 1
+
+    return letters
 
 
+def list_from_letters_dict(letters_dict, freq_time_list):
+    letter_string = []
+
+    for item in freq_time_list:
+            print item
+            print item[0]
+            print letters_dict
+            print letters_dict[item[0]]
+            print ""
+            letter_string.append(letters_dict[item[0]])
+
+    print letter_string
+    return letter_string
+
+
+# r4 = fuzzy_list(r2)
+letters_dictionary = letters_dict(max(r2, s2))
+r4 = list_from_letters_dict(letters_dictionary, r3)
+s4 = list_from_letters_dict(letters_dictionary, s3)
+# fuzz.partial_ratio(r4, s4)

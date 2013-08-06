@@ -26,7 +26,7 @@
         {% for video in video_group.analysis_group %}
             <h2> {{video.analysis_track.path}}{{video.analysis_track.filename}}</h2>
             <h2> trackid:{{video.analysis_track.filename}} </h2>
-            <video id="video-{{loop.index}}" height="200" controls preload="auto" data-sync-point="{{video.sync_point}}" data-status="notPLaying">
+            <video id="video-{{loop.index}}" height="200" controls preload="auto" data-sync-point="{{video.sync_point}}" data-status="notPlaying">
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename}} type="video/mp4"/>
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename_webm}} type="video/webm"/>
             </video>
@@ -63,7 +63,7 @@ function init() {
 function onPlayThrough(event) {
     var video = event.currentTarget;
     video.readyToPlayNow = true;
-    if (v1.readyToPlayNow && v2.readyToPlayNow) {
+    if (v1[0].readyToPlayNow && v2[0].readyToPlayNow) {
         playButton.removeAttr('disabled');
         pauseButton.removeAttr('disabled');
     }
@@ -73,7 +73,7 @@ function onPlayThrough(event) {
 function onPlayClick(event) {
     var vFirst, vSecond;
 
-    if (Number(v1.attr('data-sync-point')) > Number(v2.attr('data-sync-point'))) {
+    if (Number(v1.attr('data-sync-point')) > (Number(v2.attr('data-sync-point')))) {
         vFirst = v2;
         vSecond = v1;
     } else {
@@ -81,33 +81,31 @@ function onPlayClick(event) {
         vSecond = v2
     }
 
-    //event listener
+    // Event listener
     vFirst.on("timeupdate", function() {
-        if ((vFirst[0].currentTime*1000 >= vSecond.attr('data-sync-point')) { // &&(vSecond.attr('data-status') == 'notPLaying')){ 
+        if (((vFirst[0].currentTime*1000) >= vSecond.attr('data-sync-point')) &&(vSecond.attr('data-status') == 'notPlaying')){ 
             vSecond[0].play();
             console.log('VIDEO PLAYING')
+            console.log(vFirst[0].currentTime*1000)
             vSecond.attr('data-status', "playing");
         }
     })
     vFirst[0].play();
     vFirst.attr('data-status', 'playing');
-}
 
+    if ((vSecond.attr('data-status') == 'playing') && (vFirst.attr('data-status') == 'playing')) {
+        vSecond[0].play();
+        vFirst[0].play();
+    }
+}
           
 function onPauseClick(event) {
-    console.log('before v1 pause');
     v1[0].pause(); 
-    console.log('before v2 pause');
     v2[0].pause();
-    // document.getElementById('video-2').pause();
-    // $('#video-2').get(0).pause()
 }         
 
 init();
 
             </script>
-
-
     </body>
-
 </html>
