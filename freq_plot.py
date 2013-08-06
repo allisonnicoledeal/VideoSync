@@ -7,8 +7,10 @@ import numpy as np
 from subprocess import call
 import math
 import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
+import mlpy
 
 
 sample_rate = 44100
@@ -16,8 +18,6 @@ sample_rate = 44100
 # Extract audio from video file, save as wav auido file
 # INPUT: Video file
 # OUTPUT: Does not return any values, but saves audio as wav file
-
-
 def extract_audio(video_file):
     track_name = video_file.split(".")
     audio_output = track_name[0] + "WAV.wav"
@@ -51,7 +51,6 @@ def process_audio(data, fft_bin_size, overlap):
         else:  # else create dict key and assign value
             d[dict_key] = [dict_value]
 
-
     # process remainder of samples
     for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
         sample_data = data[i:i + fft_bin_size]
@@ -77,7 +76,6 @@ def process_sample(data):
         # print 'freq: ', freq
 
         return freq
-
 
 # =================================================================
 
@@ -124,6 +122,7 @@ def fourier(sample): #, overlap):
 
     return freq_hz
 
+
 # Plot time vs freq
 def plot_d(dict):
     x = []
@@ -140,6 +139,7 @@ def plot_d(dict):
     plt.show()
 
 
+# Generate list of freq-time tuples
 def pairs(d):
     tf_pairs = []
 
@@ -149,13 +149,9 @@ def pairs(d):
 
     return sorted(tf_pairs, key=lambda tup:tup[1])
 
-# def align(tfpairs1, tfpairs2):
-#     match = False
 
-#     for
-
-# Compare two value-sorted dictionary objects to see if d1 starts within d2
-# INPUT: Two dictionaries, number of consecutive matches to be considered
+# Compare two value-sorted list objects to see if d1 starts within d2
+# INPUT: Two lists, number of consecutive matches to be considered
     # a match, error margin
 # OUTPUT: True if match, False if no match
 def compare(d1, d2, consec, err):  # start testing err value 10
@@ -206,57 +202,10 @@ def compare(d1, d2, consec, err):  # start testing err value 10
     return None
 
 
-# Test
-fftbin = 1024
-# Entire file
-
-# sound = extract_audio("HipVsRhy.mp4")
-# a1 = read_audio("HipVsRhyWAV.wav")
-# a1 = read_audio("Hiphopopotamus.wav")
-# a2 = create_samples(a1, 2)
-# a3 = process_second(a2, 10)
-
-# Portion of file to compare
-soundb = extract_audio("Gold.mp4")
-b0 = read_audio("GoldWAV.wav")
-b1 = b0[12000:130000]
-b2 = process_audio(b1, 1024, 1024/8)
-b3 = pairs(b2)
-# b4 = sorted(b2.items(), key=lambda x: x[1])
-# plot_d(b2)
-
-# soundc = extract_audio("HipVsRhy.mp4")
-# c0 = read_audio("Hiphopopotamus.wav")
-c1 = b0[10000:2000000]
-c2 = process_audio(c1, 1024, 1024/8)
-c3 = pairs(c2)
-# plot_d(c2)
-
-
-r2 = process_audio(b1, 1024, 1024*0)
-r3 = pairs(r2)
-s2 = process_audio(c1, 1024, 1024*0)
-s3 = pairs(s2)
-
-y2 = process_audio(b1, 1024, 1024*.9)
-y3 = pairs(y2)
-z2 = process_audio(c1, 1024, 1024*.9)
-z3 = pairs(z2)
-
-
-
-# compare(c3, b3, 5, 20)
-
-# compare two dictionaries
-# dkeys = []
-# dvalues = d.values()
-# for i in range(len(d)):
-#     length = len(d.values())
-#     length * (dkeys.append(d[i]))
-
+# ===================================================
+# FUZZY STRING MATCHING
 
 def letters_dict(dict, dict2):
-    # unique_freqs = len(dict)
     letters = {}
 
     char_index = 65
@@ -291,11 +240,68 @@ def list_from_letters_dict(letters_dict, freq_time_list):
     return letter_string
 
 
+# =====================================================
+# DTW
+
+def freq_list(freq_time_list):
+    freq_array = []
+    for item in freq_time_list:
+        freq_array.append(item[0])
+    return freq_array
+
+
+
+
+# Test
+fftbin = 1024
+# Entire file
+
+# sound = extract_audio("HipVsRhy.mp4")
+# a1 = read_audio("HipVsRhyWAV.wav")
+# a1 = read_audio("Hiphopopotamus.wav")
+# a2 = create_samples(a1, 2)
+# a3 = process_second(a2, 10)
+
+# Portion of file to compare
+soundb = extract_audio("HipClip.mp4")
+b0 = read_audio("HipClipWAV.wav")
+b1 = b0[44100*10:44100*25]
+b2 = process_audio(b1, 1024, 1024*0)
+b3 = pairs(b2)
+# b4 = sorted(b2.items(), key=lambda x: x[1])
+# plot_d(b2)
+
+# soundc = extract_audio("HipVsRhy.mp4")
+# c0 = read_audio("HipVsRhyWAV.wav")
+c1 = b0[44100*12:44100*25]
+c2 = process_audio(c1, 1024, 1024*0)
+c3 = pairs(c2)
+# plot_d(c2)
+# compare(c3, b3, 5, 20)
+
+r5 = freq_list(b3)
+s5 = freq_list(c3)
+
+dist, cost, path = mlpy.dtw_std(r5, s5, dist_only=False)
+fig = plt.figure(1)
+ax = fig.add_subplot(111)
+plot1 = plt.imshow(cost.T, origin='lower', cmap=cm.gray, interpolation='nearest')
+plot2 = plt.plot(path[0], path[1], 'w')
+
+xlim = ax.set_xlim((-0.5, cost.shape[0]-0.5))
+ylim = ax.set_ylim((-0.5, cost.shape[1]-0.5))
+plt.show()
+
+
+
+
+
+
 # r4 = fuzzy_list(r2)
-letters_dictionary = letters_dict(r2, s2)
-r4 = list_from_letters_dict(letters_dictionary, r3)
-s4 = list_from_letters_dict(letters_dictionary, s3)
-print fuzz.partial_ratio(r4, s4)
+# letters_dictionary = letters_dict(r2, s2)
+# r4 = list_from_letters_dict(letters_dictionary, r3)
+# s4 = list_from_letters_dict(letters_dictionary, s3)
+# print fuzz.partial_ratio(r4, s4)
 
 
 
