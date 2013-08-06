@@ -219,15 +219,15 @@ fftbin = 1024
 # Portion of file to compare
 soundb = extract_audio("Gold.mp4")
 b0 = read_audio("GoldWAV.wav")
-b1 = b0[0:100000]
+b1 = b0[12000:130000]
 b2 = process_audio(b1, 1024, 1024/8)
 b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
 # plot_d(b2)
 
 # soundc = extract_audio("HipVsRhy.mp4")
-c0 = read_audio("HipVsRhyWAV.wav")
-c1 = c0[0:100000]
+# c0 = read_audio("Hiphopopotamus.wav")
+c1 = b0[10000:2000000]
 c2 = process_audio(c1, 1024, 1024/8)
 c3 = pairs(c2)
 # plot_d(c2)
@@ -255,7 +255,7 @@ z3 = pairs(z2)
 #     length * (dkeys.append(d[i]))
 
 
-def letters_dict(dict):
+def letters_dict(dict, dict2):
     # unique_freqs = len(dict)
     letters = {}
 
@@ -264,7 +264,13 @@ def letters_dict(dict):
     for dict_key in dict.keys():
         if dict_key not in letters.keys():
             letters[dict_key] = chr(char_index)
-            print 'value: ', letters[dict_key]
+            print 'dict value: ', letters[dict_key]
+            char_index += 1
+
+    for dict2_key in dict2.keys():
+        if dict2_key not in letters.keys():
+            letters[dict2_key] = chr(char_index)
+            print 'dict2 value: ', letters[dict2_key]
             char_index += 1
 
     return letters
@@ -286,7 +292,11 @@ def list_from_letters_dict(letters_dict, freq_time_list):
 
 
 # r4 = fuzzy_list(r2)
-letters_dictionary = letters_dict(max(r2, s2))
+letters_dictionary = letters_dict(r2, s2)
 r4 = list_from_letters_dict(letters_dictionary, r3)
 s4 = list_from_letters_dict(letters_dictionary, s3)
-# fuzz.partial_ratio(r4, s4)
+print fuzz.partial_ratio(r4, s4)
+
+
+
+
