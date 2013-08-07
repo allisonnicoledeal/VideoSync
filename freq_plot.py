@@ -3,7 +3,9 @@
 # http://www.dspguide.com/
 
 import scipy.io.wavfile
+from scipy import stats
 import numpy as np
+from numpy import arange
 from subprocess import call
 import math
 import matplotlib.pyplot as plt
@@ -250,6 +252,20 @@ def freq_list(freq_time_list):
     return freq_array
 
 
+# LINEAR REGRESSION
+# ---------------------
+# from scipy import stats
+# x = [5.05, 6.75, 3.21, 2.66]
+# y = [1.65, 26.5, -5.93, 7.96]
+# gradient, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+# print "Gradient and intercept", gradient, intercept
+# Gradient and intercept (5.3935773611970186, -16.281127993087829)
+# print "R-squared", r_value**2
+# R-squared 0.524806275136
+# print "p-value", p_value
+# p-value 0.27556485788150242
+
+
 
 
 # Test
@@ -265,7 +281,7 @@ fftbin = 1024
 # Portion of file to compare
 soundb = extract_audio("HipClip.mp4")
 b0 = read_audio("HipClipWAV.wav")
-b1 = b0[44100*10:44100*25]
+b1 = b0[44100*10:44100*55]
 b2 = process_audio(b1, 1024, 1024*0)
 b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
@@ -273,7 +289,7 @@ b3 = pairs(b2)
 
 # soundc = extract_audio("HipVsRhy.mp4")
 # c0 = read_audio("HipVsRhyWAV.wav")
-c1 = b0[44100*12:44100*25]
+c1 = b0[44100*25:44100*40]
 c2 = process_audio(c1, 1024, 1024*0)
 c3 = pairs(c2)
 # plot_d(c2)
@@ -292,8 +308,19 @@ xlim = ax.set_xlim((-0.5, cost.shape[0]-0.5))
 ylim = ax.set_ylim((-0.5, cost.shape[1]-0.5))
 plt.show()
 
+# http://glowingpython.blogspot.com/2012/03/linear-regression-with-numpy.html
+# http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/python/lin_reg/
+def reg_plot(path):
+    x = path[1][:]
+    y = path[0][:]
+    xi = arange(0, len(x))
+    gradient, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+    print "Gradient: ", gradient
+    print "intercept: ", intercept
 
-
+    line = (gradient*xi)+intercept
+    plt.plot(x, y, 'ro', xi, (gradient*xi)+intercept, 'r-')
+    plt.show()
 
 
 
