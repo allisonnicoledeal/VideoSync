@@ -13,7 +13,7 @@ import matplotlib.cm as cm
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 import mlpy
-
+import dtw
 
 sample_rate = 44100
 
@@ -281,7 +281,7 @@ fftbin = 1024
 # Portion of file to compare
 soundb = extract_audio("HipClip.mp4")
 b0 = read_audio("HipClipWAV.wav")
-b1 = b0[44100*10:44100*55]
+b1 = b0[44100*11:44100*31]
 b2 = process_audio(b1, 1024, 1024*0)
 b3 = pairs(b2)
 # b4 = sorted(b2.items(), key=lambda x: x[1])
@@ -289,7 +289,7 @@ b3 = pairs(b2)
 
 # soundc = extract_audio("HipVsRhy.mp4")
 # c0 = read_audio("HipVsRhyWAV.wav")
-c1 = b0[44100*25:44100*40]
+c1 = b0[44100*15:44100*25]
 c2 = process_audio(c1, 1024, 1024*0)
 c3 = pairs(c2)
 # plot_d(c2)
@@ -298,7 +298,9 @@ c3 = pairs(c2)
 r5 = freq_list(b3)
 s5 = freq_list(c3)
 
+# MLPY TESTING
 dist, cost, path = mlpy.dtw_std(r5, s5, dist_only=False)
+dtw.line_start(path[0], path[1])
 fig = plt.figure(1)
 ax = fig.add_subplot(111)
 plot1 = plt.imshow(cost.T, origin='lower', cmap=cm.gray, interpolation='nearest')
@@ -307,6 +309,9 @@ plot2 = plt.plot(path[0], path[1], 'w')
 xlim = ax.set_xlim((-0.5, cost.shape[0]-0.5))
 ylim = ax.set_ylim((-0.5, cost.shape[1]-0.5))
 plt.show()
+
+dtw.line_start(path[0], path[1])
+
 
 # http://glowingpython.blogspot.com/2012/03/linear-regression-with-numpy.html
 # http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/python/lin_reg/
