@@ -48,7 +48,7 @@ def optimize(audio_filepath, start_sec, end_sec, delay):  # change to video_path
 
 
 
-delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 45, 2.5)
+delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 50, 6)
 
 print "delta_time: ", delta_time
 print "overlap: ", overlap
@@ -57,7 +57,7 @@ print "tolerance: ", tolerance
 
 
 
-
+# ============= RESULTS ================
 # delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 21, 23.5, 2)
     # delta_time=0.001, 
     # overlap = 20, 
@@ -82,8 +82,13 @@ print "tolerance: ", tolerance
 #     num_freqs:  9
 #     tolerance:  50
 
+delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 50, 6)
 
-
+low tol fails:  {}
+delta_time:  0.0
+overlap:  85
+num_freqs:  7
+tolerance:  50
 
 
 
