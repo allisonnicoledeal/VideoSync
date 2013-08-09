@@ -46,7 +46,7 @@ def upload_file():
             new_artist = request.form.get("artist")
             new_event = request.form.get("event")
             new_path = UPLOAD_FOLDER
-            new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
+            new_filename_webm1 = "webm_file"  # convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
             # new_filename_webm1 = "webmfilename"
             new_file1 = model.Track(title=new_title, filename=new_filename1,
                                     artist=new_artist, event=new_event, path=new_path,
@@ -55,7 +55,7 @@ def upload_file():
 
             # save file 2
             new_filename2 = filename2
-            new_filename_webm2 = convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
+            new_filename_webm2 = "webm_file"  # convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
             # new_filename_webm2 = "webmfilename"
             new_file2 = model.Track(title=new_title, filename=new_filename2,
                                     artist=new_artist, event=new_event, path=new_path,

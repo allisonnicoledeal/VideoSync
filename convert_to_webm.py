@@ -14,3 +14,7 @@ def convert_video(mp4_video, dir):
     call(["avconv", "-i", input, "-y", output])  # generate webm file (-y: does not prompt for file overwrite)
     # call(["avconv", "-i", input, " ", output])  # generate webm file (-y: does not prompt for file overwrite)
     return webm_output
+
+# def youtube_to_mp4(youtube_link):
+#     video_name = 
+#     call(["youtube-dl", youtube_link])
