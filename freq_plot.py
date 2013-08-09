@@ -54,7 +54,7 @@ def process_audio(data, fft_bin_size, overlap):
             d[dict_key] = [dict_value]
 
     # process remainder of samples
-    for i in range(int(fft_bin_size - overlap), len(data), fft_bin_size):
+    for i in range(int(fft_bin_size - overlap), len(data), int(fft_bin_size-overlap)):
         sample_data = data[i:i + fft_bin_size]
         if (len(sample_data) == fft_bin_size):
             freq_max = process_sample(sample_data)
@@ -252,88 +252,47 @@ def freq_list(freq_time_list):
     return freq_array
 
 
-# LINEAR REGRESSION
-# ---------------------
-# from scipy import stats
-# x = [5.05, 6.75, 3.21, 2.66]
-# y = [1.65, 26.5, -5.93, 7.96]
-# gradient, intercept, r_value, p_value, std_err = stats.linregress(x,y)
-# print "Gradient and intercept", gradient, intercept
-# Gradient and intercept (5.3935773611970186, -16.281127993087829)
-# print "R-squared", r_value**2
-# R-squared 0.524806275136
-# print "p-value", p_value
-# p-value 0.27556485788150242
-
-
-
-
-# Test
-fftbin = 1024
-# Entire file
-
-# sound = extract_audio("HipVsRhy.mp4")
-# a1 = read_audio("HipVsRhyWAV.wav")
-# a1 = read_audio("Hiphopopotamus.wav")
-# a2 = create_samples(a1, 2)
-# a3 = process_second(a2, 10)
-
-# Portion of file to compare
-soundb = extract_audio("HipClip.mp4")
-b0 = read_audio("HipClipWAV.wav")
-b1 = b0[44100*11:44100*31]
-b2 = process_audio(b1, 1024, 1024*0)
-b3 = pairs(b2)
-# b4 = sorted(b2.items(), key=lambda x: x[1])
-# plot_d(b2)
-
-# soundc = extract_audio("HipVsRhy.mp4")
-# c0 = read_audio("HipVsRhyWAV.wav")
-c1 = b0[44100*15:44100*25]
-c2 = process_audio(c1, 1024, 1024*0)
-c3 = pairs(c2)
-# plot_d(c2)
-# compare(c3, b3, 5, 20)
-
-r5 = freq_list(b3)
-s5 = freq_list(c3)
-
-# MLPY TESTING
-dist, cost, path = mlpy.dtw_std(r5, s5, dist_only=False)
-dtw.line_start(path[0], path[1])
-fig = plt.figure(1)
-ax = fig.add_subplot(111)
-plot1 = plt.imshow(cost.T, origin='lower', cmap=cm.gray, interpolation='nearest')
-plot2 = plt.plot(path[0], path[1], 'w')
-
-xlim = ax.set_xlim((-0.5, cost.shape[0]-0.5))
-ylim = ax.set_ylim((-0.5, cost.shape[1]-0.5))
-plt.show()
-
-dtw.line_start(path[0], path[1])
-
-
 # http://glowingpython.blogspot.com/2012/03/linear-regression-with-numpy.html
 # http://www2.warwick.ac.uk/fac/sci/moac/people/students/peter_cock/python/lin_reg/
-def reg_plot(path):
-    x = path[1][:]
-    y = path[0][:]
-    xi = arange(0, len(x))
-    gradient, intercept, r_value, p_value, std_err = stats.linregress(x,y)
-    print "Gradient: ", gradient
-    print "intercept: ", intercept
+# def reg_plot(path):
+#     x = path[1][:]
+#     y = path[0][:]
+#     xi = arange(0, len(x))
+#     gradient, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+#     print "Gradient: ", gradient
+#     print "intercept: ", intercept
 
-    line = (gradient*xi)+intercept
-    plt.plot(x, y, 'ro', xi, (gradient*xi)+intercept, 'r-')
-    plt.show()
+#     line = (gradient*xi)+intercept
+#     plt.plot(x, y, 'ro', xi, (gradient*xi)+intercept, 'r-')
+#     plt.show()
+
+
+def find_start(base_freqs, sample_freqs, consec, err):
+    sample_start = sum(sample_freqs[:consec])
+    potential_start_indices = []
+
+    for i in range(len(base_freqs)):
+        base_start = sum(base_freqs[i:i+consec])
+        if (base_start < sample_start+err) and (base_start > sample_start-err):
+            potential_start_indices.append(i)
+
+    return potential_start_indices
+
+
+def best_start(base_freqs, sample_freqs, potential_start_indices):
+    distances = float("inf")
+    start_index = None
+    for i in range(len(potential_start_indices)):
+        start_point = potential_start_indices[i]
+        dist, cost, path = mlpy.dtw_std(base_freqs[start_point:], sample_freqs, dist_only=False)
+        if dist < distances:
+            distances = dist
+            start_index = start_point
+
+    return start_index
 
 
 
-# r4 = fuzzy_list(r2)
-# letters_dictionary = letters_dict(r2, s2)
-# r4 = list_from_letters_dict(letters_dictionary, r3)
-# s4 = list_from_letters_dict(letters_dictionary, s3)
-# print fuzz.partial_ratio(r4, s4)
 
 
 

@@ -28,15 +28,14 @@ def dtw_dist(array1, array2):
     return DTW[m-1][n-1], DTW
 
 
-def dtw_path(matrix):
-    # start at 0,0
-    x_values = []
-    y_values = []
+# def dtw_path(matrix): # == REPLACED WITH ITERATIVE FXN =========
+#     # start at 0,0
+#     x_values = []
+#     y_values = []
 
+#     traverse(0,0, x_values, y_values, matrix)
 
-    traverse(0,0, x_values, y_values, matrix)
-
-    return x_values, y_values
+#     return x_values, y_values
 
 
 def traverse(x, y, x_values, y_values, matrix):
@@ -44,11 +43,14 @@ def traverse(x, y, x_values, y_values, matrix):
     # append current point
         x_values.append(x)
         y_values.append(y)
+        print "len x values:", len(x_values)
+        print "len y values:", len(y_values)
+        print ""
 
         if ((x+1 < len(matrix[0])) and (y+1 < len(matrix))):
-            diag = matrix[x+1][y+1]
-            below = matrix[x+1][y]
-            right = matrix[x][y+1]
+            diag = matrix[y+1][x+1]
+            below = matrix[y+1][x]
+            right = matrix[y][x+1]
             min_neighbour = min(diag, below, right)
             if diag == min_neighbour:
                 traverse(x+1, y+1, x_values, y_values, matrix)
@@ -65,13 +67,46 @@ def traverse(x, y, x_values, y_values, matrix):
             traverse(x, y+1, x_values, y_values, matrix)
 
 
-def line_start(x_values, y_values):
+def dtw_path(matrix):
+    # start at 0,0
+    x = 0
+    y = 0
+    x_values = []
+    y_values = []
+
+    while ((x+1 < len(matrix[0])) or (y+1 < len(matrix))):
+        x_values.append(x)
+        y_values.append(y)
+
+        if ((x+1 < len(matrix[0])) and (y+1 < len(matrix))):
+            diag = matrix[y+1][x+1]
+            below = matrix[y+1][x]
+            right = matrix[y][x+1]
+            min_neighbor = min(diag, below, right)
+            if diag == min_neighbor:
+                x += 1
+                y += 1
+            elif below == min_neighbor:
+                y += 1
+            else:  # right is min neighb
+                x += 1
+
+        elif (x+1 < len(matrix[0])):
+            x += 1
+        else:  # implied y+1 < len(matrix)
+            y += 1
+
+    return x_values, y_values
+
+
+def line_start(x_values, y_values, sample_len):
+    samp_len = sample_len/1000
     if len(x_values) == len(y_values):
         slope_match_count = 0
         slope_start_x = None
         slope_start_y = None
 
-        for i in range(1, len(x_values)-50):  # len-1 because calculations include i+1 below
+        for i in range(1, len(x_values)-sample_len):  # len-1 because calculations include i+1 below
             print "i: ", i
             print "slope match count: ", slope_match_count
             if slope_match_count > consec_matches:
@@ -79,8 +114,8 @@ def line_start(x_values, y_values):
                 print slope_start_x, slope_start_y
                 return slope_start_x*1000, slope_start_y*1000
             
-            rise = float(y_values[i+50]) - float(y_values[i])
-            run = float(x_values[i+50]) - float(x_values[i])
+            rise = float(y_values[i+sample_len]) - float(y_values[i])
+            run = float(x_values[i+sample_len]) - float(x_values[i])
             if run > 0:
                 slope = rise/run
                 print "slope: ", slope
@@ -100,12 +135,14 @@ def line_start(x_values, y_values):
 
 
 
+# ==========TEST ======================
 
-
-# a = [10, 20, 30]
-# b = [1, 12, 3]
+# a = [10, 20, 30, 5, 2]
+# b = [1, 12, 3, 5, 2]
 # d, m = dtw_dist(a,b)
 # x, y = dtw_path(m)
 
 # dist, costs = dtw.dtw_dist(r5, s5)
 # x_values, y_values = dtw.dtw_path(costs)
+# plt.plot(y_values, x_values)
+# plt.show()
