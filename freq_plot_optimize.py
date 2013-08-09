@@ -1,17 +1,20 @@
 import freq_plot
 
-def optimize(audio_filepath, delay):  # change to video_path input, delay in sec
-    best_scenario = []
+def optimize(audio_filepath, start_sec, end_sec, delay):  # change to video_path input, delay in sec
+    low_tolerance_fails = {}
+    best_scenario = [float("inf"), 9999, 9999, 9999]
+
     # audio = freq_plot.extract_audio("HipVsRhy.mp4")
     # audio = freq_plot.extract_audio("HipClip.mp4")
-    audio = freq_plot.read_audio("GoldWAV.wav")
+    # audio = freq_plot.read_audio("GoldWAV.wav")
+    audio = freq_plot.read_audio(audio_filepath)
 
     # Sample size
-    audio_base = audio[44100*21:44100*45]
-    audio_sample = audio[44100*(21+delay):44100*45]
+    audio_base = audio[44100*start_sec:44100*end_sec]
+    audio_sample = audio[44100*(start_sec+delay):44100*end_sec]
 
     # Bin overlap
-    for i in range(99):
+    for i in range(0, 99, 5):
         overlap = float(i)/float(100)
         proc_base = freq_plot.process_audio(audio_base, 1024, 1024*overlap)
         proc_sample = freq_plot.process_audio(audio_sample, 1024, 1024*overlap)
@@ -25,9 +28,62 @@ def optimize(audio_filepath, delay):  # change to video_path input, delay in sec
         # Number of freqs summed
         for j in range(5, 15):
             # Matching tolerance of freqs summed
-            for k in range(50, 200):
+            for k in range(50, 200, 10):
                 start_points = freq_plot.find_start(freqs_base, freqs_sample, j, k)
-                alignment = freq_plot.best_start(freqs_base, freqs_sample, start_points)
+                if len(start_points) > 1:
+                    alignment = freq_plot.best_start(freqs_base, freqs_sample, start_points)
+                    # freqs_per_sec = float(len(freqs_base) / float(end_sec - start_sec + delay)
+                    # start = alignmet * freqs_per_sec
+                    diff = abs(float(delay) - float(pairs_base[alignment][1]))
+                    if (diff < best_scenario[0]):
+                        best_scenario = (diff, i, j, k)
+                else:
+                    if k not in low_tolerance_fails.keys():
+                        low_tolerance_fails[k] = 1
+                    else:
+                        low_tolerance_fails[k] +=1
+
+    print "low tol fails: ", low_tolerance_fails
+    return best_scenario
+
+
+
+delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 45, 2.5)
+
+print "delta_time: ", delta_time
+print "overlap: ", overlap
+print "num_freqs: ", num_freqs
+print "tolerance: ", tolerance
+
+
+
+
+# delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 21, 23.5, 2)
+    # delta_time=0.001, 
+    # overlap = 20, 
+    # num_freqs = 6,
+    # tolerance = 90
+    
+# delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 22, 24.5, 2)
+    # delta_time:  0.001
+    # overlap:  20
+    # num_freqs:  5
+    # tolerance:  50
+
+# delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 32, 35, 2)
+#     delta_time:  0.0
+#     overlap:  65
+#     num_freqs:  5
+#     tolerance:  50
+
+# delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 45, 2.5)
+#     delta_time:  0.0
+#     overlap:  90
+#     num_freqs:  9
+#     tolerance:  50
+
+
+
 
 
 
@@ -92,3 +148,4 @@ def optimize(audio_filepath, delay):  # change to video_path input, delay in sec
 # r4 = list_from_letters_dict(letters_dictionary, r3)
 # s4 = list_from_letters_dict(letters_dictionary, s3)
 # print fuzz.partial_ratio(r4, s4)
+

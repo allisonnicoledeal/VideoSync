@@ -4,13 +4,17 @@ Flask-SQLAlchemy==1.0
 Flask-WTF==0.8.4
 Jinja2==2.7
 MarkupSafe==0.18
+PIL==1.1.7
 SQLAlchemy==0.8.2
 WTForms==1.0.4
 Werkzeug==0.9.2
 argparse==1.2.1
 -e git://github.com/seatgeek/fuzzywuzzy.git@1ab66a3d70e18e754f6760a34acacafebcffecad#egg=fuzzywuzzy-dev
+ipython==0.13.2
 itsdangerous==0.22
 matplotlib==1.2.1
+-e git://github.com/sauliusl/mlpy.git@88a673ecb8c8f3cc29976c6c72722dfb833177b1#egg=mlpy-dev
 numpy==1.7.1
+pyobjc==2.2
 scipy==0.12.0
 wsgiref==0.1.2

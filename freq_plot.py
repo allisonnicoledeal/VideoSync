@@ -31,7 +31,7 @@ def extract_audio(video_file):
 # OUTPUT: Sets sample rate of wav file, Returns data read from wav file (numpy array of integers)
 def read_audio(audio_file):
     rate, data = scipy.io.wavfile.read(audio_file)  # Return the sample rate (in samples/sec) and data from a WAV file
-    print "RATE: ", rate
+    # print "RATE: ", rate
     return data
 
 
@@ -291,6 +291,30 @@ def best_start(base_freqs, sample_freqs, potential_start_indices):
 
     return start_index
 
+
+
+# b0 = read_audio("GoldWAV.wav")
+# b1 = b0[44100*21:44100*25]
+# b2 = process_audio(b1, 1024, 1024*.0)
+# b3 = pairs(b2)
+# b5 = freq_list(b3)
+# # b4 = sorted(b2.items(), key=lambda x: x[1])
+# # plot_d(b2)
+
+# # soundc = extract_audio("HipVsRhy.mp4")
+# # c0 = read_audio("HipVsRhyWAV.wav")
+# c1 = b0[44100*23:44100*25]
+# c2 = process_audio(c1, 1024, 1024*.0)
+# c3 = pairs(c2)
+# c5 = freq_list(c3)
+# # plot_d(c2)
+# # compare(c3, b3, 5, 20)
+
+
+# start_points = find_start(b5, c5, 9, 90)
+# print "start points:", start_points
+# alignment = best_start(b5, c5, start_points)
+# print "alignment: ", alignment
 
 
 
