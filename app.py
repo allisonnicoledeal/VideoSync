@@ -4,6 +4,7 @@ from werkzeug import secure_filename
 import model
 import convert_to_webm as convert
 import datetime
+import freq_plot
 
 
 UPLOAD_FOLDER = 'uploads/'
@@ -31,66 +32,73 @@ def upload_file():
         file1 = request.files['file1']
         file2 = request.files['file2']
 
+        new_title = request.form.get("title")
+        new_artist = request.form.get("artist")
+        new_event = request.form.get("event")
+        new_path = UPLOAD_FOLDER
+
+        # file upload
         if (file1 and allowed_file(file1.filename)) and (file2 and allowed_file(file2.filename)):
-            filename1 = secure_filename(file1.filename)
-            filename2 = secure_filename(file2.filename)
+            new_filename1 = secure_filename(file1.filename)
+            new_filename2 = secure_filename(file2.filename)
 
-            # upload file
-            file1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
-            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+            file1.save(os.path.join(app.config['UPLOAD_FOLDER'], new_filename1))
+            file2.save(os.path.join(app.config['UPLOAD_FOLDER'], new_filename2))
 
-            # save files info in db
-            # save file 1
-            new_filename1 = filename1
-            new_title = request.form.get("title")
-            new_artist = request.form.get("artist")
-            new_event = request.form.get("event")
-            new_path = UPLOAD_FOLDER
-            new_filename_webm1 = "webm_file"  # convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
-            # new_filename_webm1 = "webmfilename"
-            new_file1 = model.Track(title=new_title, filename=new_filename1,
-                                    artist=new_artist, event=new_event, path=new_path,
-                                    filename_webm=new_filename_webm1)
-            model.session.add(new_file1)
+        # youtube link upload
+        elif (request.form.get("url1") and request.form.get("url2")):
+            url1 = request.form.get("url1")
+            url2 = request.form.get("url2")
+            new_filename1 = convert.youtube_to_mp4(url1, new_title, UPLOAD_FOLDER)
+            new_filename2 = convert.youtube_to_mp4(url2, new_title, UPLOAD_FOLDER)
+            new_youtube_url1 = "http://www.youtube.com/embed/" + url1[-11:]
+            new_youtube_url2 = "http://www.youtube.com/embed/" + url2[-11:]
+            
 
-            # save file 2
-            new_filename2 = filename2
-            new_filename_webm2 = "webm_file"  # convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
-            # new_filename_webm2 = "webmfilename"
-            new_file2 = model.Track(title=new_title, filename=new_filename2,
-                                    artist=new_artist, event=new_event, path=new_path,
-                                    filename_webm=new_filename_webm2)
-            model.session.add(new_file2)
+        # save file 1
+        # new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
+        new_filename_webm1 = "webmfilename"
+        new_file1 = model.Track(title=new_title, filename=new_filename1,
+                                artist=new_artist, event=new_event, path=new_path,
+                                filename_webm=new_filename_webm1, youtube_url=new_youtube_url1)
+        model.session.add(new_file1)
+
+        # save file 2
+        # new_filename_webm2 = convert.convert_video(filename2, UPLOAD_FOLDER)  # convert file to webm
+        new_filename_webm2 = "webmfilename"
+        new_file2 = model.Track(title=new_title, filename=new_filename2,
+                                artist=new_artist, event=new_event, path=new_path,
+                                filename_webm=new_filename_webm2, youtube_url=new_youtube_url2)
+        model.session.add(new_file2)
+
+        # save group info into db
+        new_timestamp = datetime.datetime.now()
+        new_group = model.Group(timestamp=new_timestamp)
+        model.session.add(new_group)
+
+        model.session.flush()
+
+        # analyze delay
+        delay = freq_plot.analyze(new_filename1, new_filename2, UPLOAD_FOLDER)
+
+        # save analysis into db
+        new_group_id = new_group.id
+        new_track_id1 = new_file1.id
+        new_sync_point1 = delay[0]
+        new_analysis1 = model.Analysis(group_id=new_group_id, track_id=new_track_id1,
+                                       sync_point=new_sync_point1)
+        model.session.add(new_analysis1)
+
+        new_track_id2 = new_file2.id
+        new_sync_point2 = delay[1]
+        new_analysis2 = model.Analysis(group_id=new_group_id, track_id=new_track_id2,
+                                       sync_point=new_sync_point2)
+        model.session.add(new_analysis2)
+
+        model.session.commit()
 
 
-            # analyze files
-
-            # save group info into db
-            new_timestamp = datetime.datetime.now()
-            new_group = model.Group(timestamp=new_timestamp)
-            model.session.add(new_group)
-
-            model.session.flush()
-
-
-            # save analysis into db
-            new_group_id = new_group.id
-            new_track_id1 = new_file1.id
-            new_sync_point1 = 99999
-            new_analysis1 = model.Analysis(group_id=new_group_id, track_id=new_track_id1,
-                                           sync_point=new_sync_point1)
-            model.session.add(new_analysis1)
-
-            new_track_id2 = new_file2.id
-            new_sync_point2 = 999999
-            new_analysis2 = model.Analysis(group_id=new_group_id, track_id=new_track_id2,
-                                           sync_point=new_sync_point2)
-            model.session.add(new_analysis2)
-
-            model.session.commit()
-
-
-            return redirect('/view_event?group_id=' + str(new_group.id))
+        return redirect('/view_event?group_id=' + str(new_group.id))
 
     return render_template('upload.html')
 

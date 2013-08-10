@@ -48,12 +48,12 @@ def optimize(audio_filepath, start_sec, end_sec, delay):  # change to video_path
 
 
 
-# delta_time, overlap, num_freqs, tolerance = optimize("GoldWAV.wav", 42, 50, 6)
+delta_time, overlap, num_freqs, tolerance = optimize("./uploads/Reg1WAV.wav", 42, 50, 6)
 
-# print "delta_time: ", delta_time
-# print "overlap: ", overlap
-# print "num_freqs: ", num_freqs
-# print "tolerance: ", tolerance
+print "delta_time: ", delta_time
+print "overlap: ", overlap
+print "num_freqs: ", num_freqs
+print "tolerance: ", tolerance
 
 
 

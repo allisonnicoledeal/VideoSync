@@ -27,6 +27,7 @@ class Track(Base):
     date_uploaded = Column(DateTime, nullable=True)
     path = Column(String(128), nullable=True)
     filename_webm = Column(String(64), nullable=True)
+    youtube_url = Column(String(256), nullable=True)
 
     # analyses_track
 

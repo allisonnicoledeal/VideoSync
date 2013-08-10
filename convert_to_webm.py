@@ -15,6 +15,13 @@ def convert_video(mp4_video, dir):
     # call(["avconv", "-i", input, " ", output])  # generate webm file (-y: does not prompt for file overwrite)
     return webm_output
 
-# def youtube_to_mp4(youtube_link):
-#     video_name = 
-#     call(["youtube-dl", youtube_link])
+def youtube_to_mp4(youtube_link, song_title, dir):
+    mp4_output = song_title + youtube_link[-11:] + ".mp4"
+    output = "./" + dir + mp4_output
+    call(["youtube-dl", "-o", output, youtube_link])
+    print "youtube-dl", "-o", output, youtube_link
+    return mp4_output
+
+
+
+# youtube_to_mp4("http://www.youtube.com/watch?v=BdBxaRng4SU", "myFlorenceTest3", "uploads/")

@@ -26,6 +26,14 @@
         {% for video in video_group.analysis_group %}
             <h2> {{video.analysis_track.path}}{{video.analysis_track.filename}}</h2>
             <h2> trackid:{{video.analysis_track.filename}} </h2>
+            <h2 youtube url: {{video.analysis_track.youtube_url}} </h2>
+
+            <!-- embed youtube source -->
+            <iframe id="iframe-{{loop.index}}" height="200"
+                src={{video.analysis_track.youtube_url}}>               
+            </iframe> <br>
+
+            <!-- display mp4 or webm sources -->
             <video id="video-{{loop.index}}" height="200" controls preload="auto" data-sync-point="{{video.sync_point}}" data-status="notPlaying">
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename}} type="video/mp4"/>
                 <source src= {{video.analysis_track.path}}{{video.analysis_track.filename_webm}} type="video/webm"/>
@@ -39,72 +47,123 @@
         <script src="http://vjs.zencdn.net/4.1/video.js"></script>
         <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
         <script type="text/javascript">
-        // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
 
-var v1, v2, playButton, pauseButton;
+        var tag = document.createElement('script');
 
-function init() {
-    v1 = $('#video-1');
-    v2 = $('#video-2');
-    playButton = $("#playAll");
-    pauseButton = $("#pauseAll");
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    v1.on("canplaythrough", onPlayThrough);
-    v2.on("canplaythrough", onPlayThrough);
-
-    v1[0].load();  // 0 index to to access DOM element of jquery collection
-    v2[0].load();
-
-    playButton.on("click", onPlayClick);
-    pauseButton.on("click", onPauseClick);
-
-}
-
-function onPlayThrough(event) {
-    var video = event.currentTarget;
-    video.readyToPlayNow = true;
-    if (v1[0].readyToPlayNow && v2[0].readyToPlayNow) {
-        playButton.removeAttr('disabled');
-        pauseButton.removeAttr('disabled');
-    }
-}
-  
-
-function onPlayClick(event) {
-    var vFirst, vSecond;
-
-    if (Number(v1.attr('data-sync-point')) > (Number(v2.attr('data-sync-point')))) {
-        vFirst = v2;
-        vSecond = v1;
-    } else {
-        vFirst = v1;
-        vSecond = v2
-    }
-
-    // Event listener
-    vFirst.on("timeupdate", function() {
-        if (((vFirst[0].currentTime*1000) >= vSecond.attr('data-sync-point')) &&(vSecond.attr('data-status') == 'notPlaying')){ 
-            vSecond[0].play();
-            console.log('VIDEO PLAYING')
-            console.log(vFirst[0].currentTime*1000)
-            vSecond.attr('data-status', "playing");
+        var player1;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('iframe-1', {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+                }
+            });
         }
-    })
-    vFirst[0].play();
-    vFirst.attr('data-status', 'playing');
 
-    if ((vSecond.attr('data-status') == 'playing') && (vFirst.attr('data-status') == 'playing')) {
-        vSecond[0].play();
-        vFirst[0].play();
-    }
-}
-          
-function onPauseClick(event) {
-    v1[0].pause(); 
-    v2[0].pause();
-}         
+        var player2;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('iframe-2', {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
+                }
+            });
+        }
 
-init();
+
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        var done = false;
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+              setTimeout(startVideo, 4000);
+              done = true;
+            }
+
+        }
+        function startVideo() {
+            // player.startVideo();
+        }
+
+
+
+
+            var v1, v2, playButton, pauseButton;
+
+            function init() {
+                v1 = $('#video-1');
+                v2 = $('#video-2');
+                playButton = $("#playAll");
+                pauseButton = $("#pauseAll");
+
+                v1.on("canplaythrough", onPlayThrough);
+                v2.on("canplaythrough", onPlayThrough);
+
+                v1[0].load();  // 0 index to to access DOM element of jquery collection
+                v2[0].load();
+
+                playButton.on("click", onPlayClick);
+                pauseButton.on("click", onPauseClick);
+
+            }
+
+            function onPlayThrough(event) {
+                var video = event.currentTarget;
+                video.readyToPlayNow = true;
+                if (v1[0].readyToPlayNow && v2[0].readyToPlayNow) {
+                    playButton.removeAttr('disabled');
+                    pauseButton.removeAttr('disabled');
+                }
+            }
+              
+
+            function onPlayClick(event) {
+                var vFirst, vSecond;
+
+                if (Number(v1.attr('data-sync-point')) > (Number(v2.attr('data-sync-point')))) {
+                    vFirst = v2;
+                    vSecond = v1;
+                } else {
+                    vFirst = v1;
+                    vSecond = v2
+                }
+
+                // Event listener
+                vFirst.on("timeupdate", function() {
+                    if (((vFirst[0].currentTime*1000) >= vSecond.attr('data-sync-point')) &&(vSecond.attr('data-status') == 'notPlaying')){ 
+                        vSecond[0].play();
+                        console.log('VIDEO PLAYING')
+                        console.log(vFirst[0].currentTime*1000)
+                        vSecond.attr('data-status', "playing");
+                    }
+                })
+                vFirst[0].play();
+                vFirst.attr('data-status', 'playing');
+
+                if ((vSecond.attr('data-status') == 'playing') && (vFirst.attr('data-status') == 'playing')) {
+                    vSecond[0].play();
+                    vFirst[0].play();
+                }
+            }
+                      
+            function onPauseClick(event) {
+                v1[0].pause(); 
+                v2[0].pause();
+            }         
+
+            init();
 
             </script>
     </body>

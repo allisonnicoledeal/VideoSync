@@ -22,10 +22,13 @@ sample_rate = 44100
 # Extract audio from video file, save as wav auido file
 # INPUT: Video file
 # OUTPUT: Does not return any values, but saves audio as wav file
-def extract_audio(video_file):
+def extract_audio(dir, video_file):
     track_name = video_file.split(".")
     audio_output = track_name[0] + "WAV.wav"
-    audio_data = call(["avconv", "-i", video_file, "-vn", "-f", "wav", audio_output])
+    output = dir + audio_output
+    audio_data = call(["avconv", "-i", dir+video_file, "-vn", "-f", "wav", output])
+    # audio_data = call(["avconv", "-n", "-i", dir+video_file, "-vn", "-f", "wav", output])
+    return output
 
 
 # Read file
@@ -100,7 +103,7 @@ def channel_avg(raw_data_matrix):
 # INPUT: list with length of number of samples per second
 # OUTPUT: list of real values len of num samples per second
 # Reference: http://stackoverflow.com/questions/3694918/how-to-extract-frequency-associated-with-fft-values-in-python
-def fourier(sample): #, overlap):
+def fourier(sample):  #, overlap):
     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
 
     freqs = np.fft.fftfreq(len(sample))  #, overlap) #dont have to recalculate for each sample, pass as parameter
@@ -163,42 +166,76 @@ def best_start(base_freqs, sample_freqs, potential_start_indices):
     return start_index
 
 
+# def analyze(video1_base, video2_sample, dir):
+#     sound_base = extract_audio(dir, video1_base)
+#     base0 = read_audio(sound_base)
+#     base1 = base0[44100*12:44100*50]
+#     base2 = process_audio(base1, 1024, 1024*.25)
+#     base3 = pairs(base2)
+#     base5 = freq_list(base3)
 
+#     sound_sample = extract_audio(dir, video2_sample)
+#     sample0 = read_audio(sound_sample)
+#     sample1 = sample0[44100*12:44100*30]
+#     sample2 = process_audio(sample1, 1024, 1024*.25)
+#     sample3 = pairs(sample2)
+#     sample5 = freq_list(sample3)
+
+#     start_points = find_start(base5, sample5, 6, 50)
+#     print "start points:", start_points
+#     alignment = best_start(base5, sample5, start_points)
+#     print "alignment: ", alignment
+#     secs = base3[alignment][1]  # must be longer sample
+#     print "sec: ", secs
+
+#     return (0, secs)  # returns tuple of long video delay, short video delay
+
+
+#========== TESTING============
+# dir = "./uploads/"
+# # video1_base = "Gold.mp4"
+# # video2_sample = "HipClip.mp4"
+# # video1_base = "regina6POgShQ-lC4.mp4"
+# # video2_sample = "reginaJo2cUWpILMg.mp4"
+# # video1_base = "regina6POgShQ-lC4.mp4"
+# # video2_sample = "reginaJo2cUWpILMg.mp4"
 # video1_base = "Gold.mp4"
-# video2_sample = "HipClip.mp4"
+# video2_sample = "Gold.mp4"
+# # video2_sample = "Reg2.mp4"
 
-def analyze(video1_base, video2_sample):
-    sound_base = extract_audio(video1_base)
-    base_file = video1_base.split(".")
-    base_wav = base_file[0] + "WAV.wav"
-    base0 = read_audio(base_wav)
-    base1 = base0[44100*5:44100*50]
-    base2 = process_audio(base1, 1024, 1024*.25)
-    base3 = pairs(base2)
-    base5 = freq_list(base3)
+# sound_base = extract_audio(dir, video1_base)
+# base0 = read_audio(sound_base)
+# base1 = base0[44100*0:44100*50]
+# base2 = process_audio(base1, 1024, 1024*.25)
+# base3 = pairs(base2)
+# base5 = freq_list(base3)
 
-    sound_sample = extract_audio(video2_sample)
-    sample_file = video2_sample.split(".")
-    sample_wav = sample_file[0] + "WAV.wav"
-    sample0 = read_audio(sample_wav)
-    sample1 = sample0[44100*5:44100*30]
-    sample2 = process_audio(sample1, 1024, 1024*.25)
-    sample3 = pairs(sample2)
-    sample5 = freq_list(sample3)
+# sound_sample = extract_audio(dir, video2_sample)
+# sample0 = read_audio(sound_sample)
+# sample1 = sample0[44100*11:44100*30]
+# sample2 = process_audio(sample1, 1024, 1024*.25)
+# sample3 = pairs(sample2)
+# sample5 = freq_list(sample3)
 
-    start_points = find_start(base5, sample5, 6, 50)
-    print "start points:", start_points
-    alignment = best_start(base5, sample5, start_points)
-    print "alignment: ", alignment
-    secs = base3[alignment][1]  # must be longer sample
-    print "sec: ", secs
+# start_points = find_start(base5, sample5, 6, 50) # 6, 50 has been working
+# print "start points:", start_points
+# alignment = best_start(base5, sample5, start_points)
+# print "alignment: ", alignment
+# secs = base3[alignment][1]  # must be longer sample
+# print "sec: ", secs
 
-    return (0, secs)  # returns tuple of long video delay, short video delay
+
 
 
 #========== TEST ================
-offset = analyze("Reg1.mp4", "Reg2.mp4")
+# offset = analyze("regina6POgShQ-lC4.mp4", "reginaJo2cUWpILMg.mp4", "./uploads/")
+# offset = analyze("Reg1.mp4", "Reg2.mp4")
 # offset = analyze("HipVsRhy.mp4", "HipClip.mp4")
+
+# http://www.youtube.com/watch?v=6POgShQ-lC4
+# http://www.youtube.com/watch?v=Jo2cUWpILMg
+# http://www.youtube.com/watch?v=FKbWPHRCJm8
+# http://www.youtube.com/watch?v=R49i0BzIiHc
 
 
 

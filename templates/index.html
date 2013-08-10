@@ -5,9 +5,18 @@
         <link href="http://vjs.zencdn.net/4.1/video-js.css" rel="stylesheet">
     </head>
 
-    <body>
-
+    <body>                                                                                                                                                   
         <h2> {{video1.path}}{{video1.filename}}</h2>
+
+        <iframe id="player" width="420" height="345"
+        src="http://www.youtube.com/embed/XGSy3_Czz8k">
+        </iframe> <br>
+
+        <!-- <embed
+        width="420" height="3   45"
+        src="http://www.youtube.com/v/XGSy3_Czz8k"
+        type="application/x-shockwave-flash">
+        </embed> <br> -->
 
         <video id="video1" class="video-js vjs-default-skin" mediaGroup="1"   height="200" controls preload="auto">
             <source src="http://s3.amazonaws.com/dev-files.launchpadtoys.com/18387-4f9314f6523e4/toontastic-cartoon.mov" type="video/mp4" />
@@ -33,39 +42,87 @@
 
         <script src="http://vjs.zencdn.net/4.1/video.js"></script>
         <script src="http://code.jquery.com/jquery-2.0.3.js"></script>
+
         <script type="text/javascript">
-        // http://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_av_prop_mediagroup
-            var v1 = document.getElementById('video1');
-            var v2 = document.getElementById('video2');
 
-            v1.load();
-            v2.load();
+        var tag = document.createElement('script');
 
-            var playButton = $("#playAll");
-            playButton.on("click", function() {
-                console.log("CLICKED!");
-                console.log(v1.readyState);
-                console.log(v2.readyState);
-            
-                if ((v1.readyState === 4) && (v2.readyState === 4)) {
-                    v2.play()
-                    if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
-                        window.setTimeout(function() {
-                            v1.play()
-                        }, 6000);
-                    }
-                    else {
-                        v1.play()
-                    }
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange
                 }
             });
+        }
 
-            var pauseButton = $("#pauseAll");
-            pauseButton.on("click", function() {
-                console.log("PAUSE CLICKED!");
-                v1.pause()
-                v2.pause()
-            });
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        var done = false;
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+              setTimeout(stopVideo, 6000);
+              done = true;
+            }
+            
+        }
+        function stopVideo() {
+            player.stopVideo();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // var v1 = document.getElementById('video1');
+            // var v2 = document.getElementById('video2');
+
+            // v1.load();
+            // v2.load();
+
+            // var playButton = $("#playAll");
+            // playButton.on("click", function() {
+            //     console.log("CLICKED!");
+            //     console.log(v1.readyState);
+            //     console.log(v2.readyState);
+            
+            //     if ((v1.readyState === 4) && (v2.readyState === 4)) {
+            //         v2.play()
+            //         if ((v1.currentTime === 0) && (v2.currentTime === 0)) {
+            //             window.setTimeout(function() {
+            //                 v1.play()
+            //             }, 6000);
+            //         }
+            //         else {
+            //             v1.play()
+            //         }
+            //     }
+            // });
+
+            // var pauseButton = $("#pauseAll");
+            // pauseButton.on("click", function() {
+            //     console.log("PAUSE CLICKED!");
+            //     v1.pause()
+            //     v2.pause()
+            // });
 
             // add event listener canplaythrough, progress
             // look in course materials for reference
