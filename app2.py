@@ -26,6 +26,7 @@ def index():
     groups = model.session.query(model.Group).all()
     # groups = model.session.query(model.Group).filter_by(id<4)
 
+
     if request.method == 'POST':
         file1 = request.files['file1']
         file2 = request.files['file2']

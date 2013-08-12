@@ -60,16 +60,16 @@
 		</div>
 
 		<div class="row">
-				<div class="span6">
-		            <div id="iframe-1" data-source={{video1.youtube_url}} data-sync={{video1.analysis_track.sync_point}} data-status="notPlaying"></div>               
+				<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
+		            <div id="iframe-1"></div>               
 		            <div>
 		            	<h6> youtube url: {{video1.youtube_url}} </h6>
 		            </div>
 		        </div>
-		        <div class="span6">
-		            <div id="iframe-2" data-source={{video2.youtube_url}} data-sync={{video2.analysis_track.sync_point}} data-status="notPlaying"></div>
+		        <div id="data-2" class="span6" data-source="{{video2.youtube_url}}" data-sync="{{video2.analysis_track[0].sync_point}}" data-status="notPlaying">
+		            <div id="iframe-2"></div>
 		            <div>
-		            	<h6> youtube url: {{video2.youtube_url}} </h6>
+                        <h6> youtube url: {{video2.youtube_url}} </h6>
 		            </div>
 		        </div>
 		</div>
@@ -159,15 +159,20 @@
         var firstScriptTag = document.getElementsByTagName('script')[0];
         firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        var player1, player2;
+        var player1, player2, data1, data2;
         var playButton, pauseButton;
 
-        function init() {
-        playButton = $("#playAll");
-        pauseButton = $("#pauseAll");
 
-        playButton.bind("click", onPlayClick);
-        pauseButton.on("click", onPauseClick);
+
+
+        function init() {
+            data1 = $("#data-1");
+            data2 = $("#data-2");
+            playButton = $("#playAll");
+            pauseButton = $("#pauseAll");
+
+            playButton.on("click", onPlayClick);
+            pauseButton.on("click", onPauseClick);
         }
 
         // Create YouTube Iframe elements
@@ -175,7 +180,7 @@
             player1 = new YT.Player('iframe-1', {
                 height: '350',
                 width: '450',
-                videoId: document.getElementById('iframe-1').getAttribute('data-source').split("embed/")[1],
+                videoId: data1.attr('data-source').split("embed/")[1],
                 playerVars: {'autoplay': 0, 'controls': 1},
                 events: {
                 'onReady': onPlayerReady,
@@ -186,7 +191,7 @@
             player2 = new YT.Player('iframe-2', {
                 height: '350',
                 width: '450',
-                videoId: document.getElementById('iframe-2').getAttribute('data-source').split("embed/")[1],
+                videoId: data2.attr('data-source').split("embed/")[1],
                 playerVars: {'autoplay': 0, 'controls': 1},
                 events: {
                 'onReady': onPlayerReady,
@@ -213,36 +218,46 @@
                     // player1.playVideo();
                     // player2.playVideo();
                 }
-            }, 1000)
+            }, 500)
         }
 
         function onPlayClick(event) {
             var vFirst, vSecond;
 
-            console.log(player1.getAttribute('data-sync'));
-            console.log(player2['data-sync']);
-
-            if (Number(player1['data-sync']) > (Number(player2['data-sync']))) {
-                vFirst = player2;
-                vSecond = player1;
-            } else {
-                vFirst = player1;
+            if (Number(data1.attr("data-sync")) < (Number(data2.attr("data-sync")))) {
+                vFirst = player1; // player element
+                vFirstData = data1; // dom element
                 vSecond = player2;
+                vSecondData = data2;
+                console.log("one is first");
+            } else {
+                vFirst = player2;
+                vFirstData = data2;
+                vSecond = player1;
+                vSecondData = data1;
+                console.log("two is first");
+
             }
 
             // Event listener
-            vFirst.addEventListener("timeupdate", function() {
-                if (((vFirst.getCurrentTime*1000) >= vSecond['data-sync']) &&(vSecond['data-status'] == 'notPlaying')){ 
-                    vSecond.playVideo();
-                    console.log('VIDEO PLAYING')
-                    console.log(vFirst.getCurrentTime*1000)
-                    vSecond['data-status'] = "playing";
-                }
-            })
-            vFirst.playVideo();
-            vFirst['data-status'] = 'playing';
+            window.setInterval(function() {
+                console.log("in event listener");
+                console.log(vFirst.getCurrentTime());
+                console.log(vSecondData.attr('data-sync'));
+                console.log(vSecondData.attr('data-status'));
 
-            if ((vSecond['data-status'] == 'playing') && (vFirst['data-status'] == 'playing')) {
+                if ((vFirst.getCurrentTime() >= vSecondData.attr('data-sync')) && (vSecondData.attr('data-status') == 'notPlaying')){ 
+                    vSecond.playVideo();
+                    console.log('VIDEO PLAYING');
+                    console.log(vFirst.getCurrentTime*1000);
+                    vSecondData.attr('data-status', "playing");
+                }
+            }, 250);
+
+            vFirst.playVideo();
+            data1.attr('data-status', 'playing');
+
+            if ((data2.attr('data-status') == 'playing') && (data1.attr('data-status') == 'playing')) {
                 vSecond.playVideo();
                 vFirst.playVideo();
             }
@@ -267,20 +282,7 @@
         // }
         // function startVideo() {
         //     // player.startVideo();
-        // }
 
-
-
-
-
-
-
-            // function init() {
- 
-            //     v1.on("canplaythrough", onPlayThrough);
-            //     v2.on("canplaythrough", onPlayThrough);
-
-            // }
 
 
               
