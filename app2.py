@@ -23,8 +23,8 @@ def allowed_file(filename):
 def index():
     video1 = model.session.query(model.Track).get(23)
     video2 = model.session.query(model.Track).get(24)
-    # groups = model.session.query(model.Group).all()
-    groups = model.session.query(model.Group).filter_by(id<4)
+    groups = model.session.query(model.Group).all()
+    # groups = model.session.query(model.Group).filter_by(id<4)
 
     if request.method == 'POST':
         file1 = request.files['file1']
