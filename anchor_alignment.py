@@ -21,7 +21,7 @@ def extract_audio(dir, video_file):
     track_name = video_file.split(".")
     audio_output = track_name[0] + "WAV.wav"  # !! CHECK TO SEE IF FILE IS IN UPLOADS DIRECTORY
     output = dir + audio_output
-    call(["avconv", "-i", dir+video_file, "-vn", "-f", "wav", output])
+    call(["avconv", "-y", "-i", dir+video_file, "-vn", "-f", "wav", output])
     # audio_data = call(["avconv", "-n", "-i", dir+video_file, "-vn", "-f", "wav", output])
     return output
 
@@ -46,7 +46,7 @@ def read_audio(audio_file):
 def generate_matrix(data, fft_bin_size, overlap):
     intensity_matrix = []
 
-    # process first sample
+    # process first sample and set matrix height
     sample_data = data[0:fft_bin_size]
     if (len(sample_data) == fft_bin_size):
         intensities = fourier(sample_data)
@@ -61,9 +61,7 @@ def generate_matrix(data, fft_bin_size, overlap):
             for k in range(len(intensities)):
                 intensity_matrix[k].append(intensities[k])
 
-
     return intensity_matrix
-
 
 
 
@@ -94,7 +92,52 @@ def fourier(sample):  #, overlap):
     return mag
 
 
+def find_peaks(intensity_matrix, zone_height, zone_width, num_samples, fft_bin_size):  #num samples per zone
+    peaks = []  # tuples of time and freq
+    freqs = np.fft.fftfreq(len(intensity_matrix))  #, overlap) #dont have to recalculate for each sample, pass as parameter
 
+
+    # Define zone
+    for i in range(int(len(intensity_matrix[0])/zone_width)):
+        print "i: ", i
+        for j in range(int(len(intensity_matrix)/zone_height)):
+            print "rows: ", len(intensity_matrix)
+            
+            # Find max num_samples in zone
+            zone_max = [0]
+            print "i: ", i
+            print "j: ", j
+
+            if (i + zone_width) < len(intensity_matrix[0]):
+
+                for k in range(zone_height):
+                    x_min = i * zone_width
+                    x_max = (i+1) * zone_width
+                    y = (j * zone_height) + k
+                    section = intensity_matrix[y][x_min:x_max]
+                    # print "section: ", section
+                    max_int = max(section)
+                    # print "max intensity: ", max_int
+
+                    while (max_int > min(zone_max)):
+                        # print "zone max: ", zone_max
+
+                        x = (i * zone_width) + section.index(max_int)  # x coordinate
+                        second = (float((x*fft_bin_size)+((x+1)*fft_bin_size))/float(2.0))/float(sample_rate)
+                        y = (j * zone_height) + k  # y coordinate
+                        frequency = freqs[y]
+                        zone_max.remove(min(zone_max)) # remove smallest number
+                        zone_max.append((max_int, frequency, second)) # replace it with larger tuple
+
+                        if (len(zone_max) < num_samples):
+                            section.remove(max_int)  # delete maximum element
+                        max_int = max(section)  # find new max in sample
+                        # print "new max int: ", max_int
+            print "zone max: ", zone_max
+            peaks.append(zone_max)
+
+
+    return peaks
 
 
 
@@ -146,7 +189,8 @@ dir="./uploads/"
 # def align(video1_base, video2_sample, dir):
 sound_base = extract_audio(dir, str(video1_base))
 audio_base = read_audio(sound_base)
-matrix_base = generate_matrix(audio_base, 1024, 1024*.25)
+matrix_base = generate_matrix(audio_base[:44100*10], 1024, 1024*.25)
+peaks = find_peaks(matrix_base, 256, 30, 4, 1024)
 # base3 = freq_list(base2)
 
 # sound_sample = extract_audio(dir, str(video2_sample))
