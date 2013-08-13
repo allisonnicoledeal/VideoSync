@@ -35,8 +35,10 @@ def extract_audio(dir, video_file):
 # INPUT: Audio file
 # OUTPUT: Sets sample rate of wav file, Returns data read from wav file (numpy array of integers)
 def read_audio(audio_file):
+
     filename = audio_file.split(".")
-    output = "." + filename[1] + "_1." + filename[2]
+    print 'FILENAME: ', filename
+    output = "./" + filename[0] + "_1." + filename[1]
     call(["sox", audio_file, output, "channels", "1"])
     rate, data = scipy.io.wavfile.read(output)  # Return the sample rate (in samples/sec) and data from a WAV file
     # print "RATE: ", rate  # !! RETURN RATE
@@ -121,6 +123,7 @@ def freq_list(tuples_list):
 def find_start(base_freqs, sample_freqs, consec, err):  # base freqs is known first track
     sample_start = sum(sample_freqs[:consec])
     potential_start_indices = []
+    # potential_start_indices = [0]
 
     for i in range(len(base_freqs)):
         base_start = sum(base_freqs[i:i+consec])
@@ -211,16 +214,24 @@ def plot_freq(base_freqs, sample_freqs):  # argument is list of freq-time tuples
 # chroma energy normalized statistics
 
 def align(video1_base, video2_sample, dir):
-    sound_base = extract_audio(dir, video1_base)
+    sound_base = extract_audio(dir, str(video1_base))
     base0 = read_audio(sound_base)
-    base1 = base0 [44100*3:-44100*30]
+    print base0
+    if len(base0) > (44100*60):
+        base1 = base0 [44100*3:-44100*30]
+    else:
+        base1 = base0 [44100*3:]
     base2 = process_audio(base1, 1024, 1024*.0)
     base3 = freq_list(base2)
 
-    sound_sample = extract_audio(dir, video2_sample)
+    sound_sample = extract_audio(dir, str(video2_sample))
     sample0 = read_audio(sound_sample)
-    sample1 = sample0 [44100*3:-44100*30]
+    if len(sample0) > (44100*60):
+        sample1 = sample0 [44100*3:-44100*30]
+    else:
+        sample1 = sample0 [44100*3:]
     sample2 = process_audio(sample1, 1024, 1024*.0)
+    print sample2
     sample3 = freq_list(sample2)
 
     start_points = find_start(base3, sample3, 6, 50) # 6, 50 has been working
@@ -229,10 +240,10 @@ def align(video1_base, video2_sample, dir):
     print "alignment: ", alignment
     secs = base2[alignment][1]  # must be longer sample
     print "sec: ", secs
-    stereo = make_stereo(sound_base, sound_sample, secs, dir)
-    print stereo
+    # stereo = make_stereo(sound_base, sound_sample, secs, dir)
+    # print stereo
 
-    plot_freq(base2, sample2)
+    # plot_freq(base2, sample2)
 
 
 

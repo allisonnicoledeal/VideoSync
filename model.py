@@ -29,7 +29,7 @@ class Track(Base):
     filename_webm = Column(String(64), nullable=True)
     youtube_url = Column(String(256), nullable=True)
 
-    # analyses_track
+    # analysis_track
 
 
 class Analysis(Base):
@@ -41,7 +41,7 @@ class Analysis(Base):
     sync_point = Column(Integer, nullable=False)  # num milliseconds?
 
     analyses_group = relationship("Group", backref=backref("analysis_group"), order_by=id)
-    analysis_track = relationship("Track", backref=backref("analysis_track"))
+    analysis_track = relationship("Track", backref=backref("analysis_track"))  # uselist=False
 
 class Group(Base):
     __tablename__ = "groups"

@@ -11,9 +11,9 @@ from numpy import arange
 from subprocess import call
 import math
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
+# import matplotlib.cm as cm
+# from fuzzywuzzy import fuzz
+# from fuzzywuzzy import process
 import mlpy
 import dtw
 
@@ -24,7 +24,7 @@ sample_rate = 44100
 # OUTPUT: Does not return any values, but saves audio as wav file
 def extract_audio(dir, video_file):
     track_name = video_file.split(".")
-    audio_output = track_name[0] + "WAV.wav"
+    audio_output = track_name[0] + "WAV.wav"  # !! CHECK TO SEE IF FILE IS IN UPLOADS DIRECTORY
     output = dir + audio_output
     audio_data = call(["avconv", "-i", dir+video_file, "-vn", "-f", "wav", output])
     # audio_data = call(["avconv", "-n", "-i", dir+video_file, "-vn", "-f", "wav", output])
@@ -36,7 +36,7 @@ def extract_audio(dir, video_file):
 # OUTPUT: Sets sample rate of wav file, Returns data read from wav file (numpy array of integers)
 def read_audio(audio_file):
     rate, data = scipy.io.wavfile.read(audio_file)  # Return the sample rate (in samples/sec) and data from a WAV file
-    # print "RATE: ", rate
+    # print "RATE: ", rate  # !! RETURN RATE
     return data
 
 
@@ -71,18 +71,18 @@ def process_audio(data, fft_bin_size, overlap):
                 d[dict_key].append(dict_value)  # dict_key is max freq and dict_value is time
             else:  # else create dict key and assign value
                 d[dict_key] = [dict_value]
-
     return d
 
 
 # process individual sample
 def process_sample(data):
-        avg = channel_avg(data)
-        # print 'LEN AVG, SHOULD BE 1024', len(avg)
+    if len(data.shape) == 2:  # check for stereo
+        avg = channel_avg(data)  # 'LEN AVG, SHOULD BE 1024', len(avg)
         freq = fourier(avg)
-        # print 'freq: ', freq
+    else:  # if one channel
+        freq = fourier(data)
 
-        return freq
+    return freq
 
 # =================================================================
 
@@ -98,16 +98,13 @@ def channel_avg(raw_data_matrix):
     return data_channel_avg
 
 
-
 # Compute the one-dimensional discrete Fourier Transform
 # INPUT: list with length of number of samples per second
 # OUTPUT: list of real values len of num samples per second
 # Reference: http://stackoverflow.com/questions/3694918/how-to-extract-frequency-associated-with-fft-values-in-python
 def fourier(sample):  #, overlap):
     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
-
     freqs = np.fft.fftfreq(len(sample))  #, overlap) #dont have to recalculate for each sample, pass as parameter
-
     mag = abs(fft_data) # not necessary
     mag2 = mag**2
     index = np.argmax(mag2)
@@ -122,13 +119,11 @@ def pairs(d):
     tf_pairs = []
 
     for item in d.items():
-        for i in range(len(item[1])):
+        for i in range(len(item[1])):  # !! FIX THIS
             tf_pairs.append((item[0], item[1][i]))
 
     return sorted(tf_pairs, key=lambda tup:tup[1])
 
-
-# DTW
 
 def freq_list(freq_time_list):
     freq_array = []
@@ -137,7 +132,8 @@ def freq_list(freq_time_list):
     return freq_array
 
 
-def find_start(base_freqs, sample_freqs, consec, err):
+# find potential starting points in track, sections with similar summed frequencies for x consecutive samples
+def find_start(base_freqs, sample_freqs, consec, err):  # base freqs is known first track
     sample_start = sum(sample_freqs[:consec])
     potential_start_indices = []
 
@@ -147,6 +143,7 @@ def find_start(base_freqs, sample_freqs, consec, err):
             potential_start_indices.append(i)
 
     return potential_start_indices
+
 
 
 def best_start(base_freqs, sample_freqs, potential_start_indices):
@@ -165,6 +162,10 @@ def best_start(base_freqs, sample_freqs, potential_start_indices):
 
     return start_index
 
+
+# information retrieval for music and motion pdf
+# http://drops.dagstuhl.de/opus/volltexte/2012/3473/pdf/12.pdf
+# chroma energy normalized statistics
 
 # def analyze(video1_base, video2_sample, dir):
 #     sound_base = extract_audio(dir, video1_base)
@@ -192,7 +193,7 @@ def best_start(base_freqs, sample_freqs, potential_start_indices):
 
 
 #========== TESTING============
-# dir = "./uploads/"
+dir = "./uploads/"
 # # video1_base = "Gold.mp4"
 # # video2_sample = "HipClip.mp4"
 # # video1_base = "regina6POgShQ-lC4.mp4"
@@ -201,28 +202,30 @@ def best_start(base_freqs, sample_freqs, potential_start_indices):
 # # video2_sample = "reginaJo2cUWpILMg.mp4"
 # video1_base = "Gold.mp4"
 # video2_sample = "Gold.mp4"
-# # video2_sample = "Reg2.mp4"
+# video2_sample = "Reg2.mp4"
+video2_sample = "tessalateoGIjeYNlOXE.mp4"
+video1_base = "tessalateBLZQmqJ6Yos.mp4"
 
-# sound_base = extract_audio(dir, video1_base)
-# base0 = read_audio(sound_base)
-# base1 = base0[44100*0:44100*50]
-# base2 = process_audio(base1, 1024, 1024*.25)
-# base3 = pairs(base2)
-# base5 = freq_list(base3)
+sound_base = extract_audio(dir, video1_base)
+base0 = read_audio(sound_base)
+base1 = base0[44100*0:44100*50]
+base2 = process_audio(base1, 1024, 1024*.25)
+base3 = pairs(base2)
+base5 = freq_list(base3)
 
-# sound_sample = extract_audio(dir, video2_sample)
-# sample0 = read_audio(sound_sample)
-# sample1 = sample0[44100*11:44100*30]
-# sample2 = process_audio(sample1, 1024, 1024*.25)
-# sample3 = pairs(sample2)
-# sample5 = freq_list(sample3)
+sound_sample = extract_audio(dir, video2_sample)
+sample0 = read_audio(sound_sample)
+sample1 = sample0[44100*0:44100*30]
+sample2 = process_audio(sample1, 1024, 1024*.25)
+sample3 = pairs(sample2)
+sample5 = freq_list(sample3)
 
-# start_points = find_start(base5, sample5, 6, 50) # 6, 50 has been working
-# print "start points:", start_points
-# alignment = best_start(base5, sample5, start_points)
-# print "alignment: ", alignment
-# secs = base3[alignment][1]  # must be longer sample
-# print "sec: ", secs
+start_points = find_start(base5, sample5, 6, 50) # 6, 50 has been working
+print "start points:", start_points
+alignment = best_start(base5, sample5, start_points)
+print "alignment: ", alignment
+secs = base3[alignment][1]  # must be longer sample
+print "sec: ", secs
 
 
 

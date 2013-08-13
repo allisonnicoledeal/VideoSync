@@ -60,25 +60,18 @@
 		</div>
 
 		<div class="row">
-				<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
-		            <div id="iframe-1"></div>               
-		            <div>
-		            	<h6> youtube url: {{video1.youtube_url}} </h6>
-		            </div>
+            {% for video in video_group.analysis_group %}
+				<div id="data-{{loop.index}}" class="span6" data-source="{{video.analysis_track.youtube_url}}" data-sync="{{video.sync_point}}" data-status="notPlaying">
+                    <div id="iframe-{{loop.index}}"></div>               
 		        </div>
-		        <div id="data-2" class="span6" data-source="{{video2.youtube_url}}" data-sync="{{video2.analysis_track[0].sync_point}}" data-status="notPlaying">
-		            <div id="iframe-2"></div>
-		            <div>
-                        <h6> youtube url: {{video2.youtube_url}} </h6>
-		            </div>
-		        </div>
+            {% endfor %}
 		</div>
 
 		<div class="row">
 			<div class="span4">
-				Title: {{video1.title}}
-				Artist: {{video1.artist}}
-				Event: {{video1.event}}
+				Title: {{video_group.analysis_group[0].title}}
+				Artist: {{video_group.analysis_group[0].artist}}
+				Event: {{video_group.analysis_group[0].event}}
 			</div>
 			<div class="span8">
 				<button id="playAll" class="btn" disabled>Play</button>
@@ -130,7 +123,7 @@
 			                <h4>Sync Point:{{analysis.sync_point}}</h4>
 			                <h4>Track:{{analysis.analysis_track.filename}}</h4>
 			            {% endfor %}
-			            <a href="/view_event?group_id={{group.id}}">View video group {{group.id}}</a>
+			            <a href="/watch?group_id={{group.id}}">View video group {{group.id}}</a>
 		         	</div>
 		        {% endfor %}
 		    </div>
@@ -264,8 +257,14 @@
             data1.attr('data-status', 'playing');
 
             if ((data2.attr('data-status') == 'playing') && (data1.attr('data-status') == 'playing')) {
-                vSecond.playVideo();
-                vFirst.playVideo();
+                if (vSecond.getPlayerState != 0) { //if second video hasn't ended
+                    vSecond.playVideo();
+                }
+                console.log("player 1");
+                console.log(vFirst.getPlayerState());
+                if (vFirst.getPlayerState() != 0) { // if first video hasn't ended
+                    vFirst.playVideo();
+                }
             }
         }
                   
