@@ -111,6 +111,12 @@ def fourier(sample):  #, overlap):
     freq = freqs[index]  # only valid if index > len(fft_data)/2
     freq_hz = abs(freq*sample_rate)
 
+    #     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
+    # for i in range(len(fft_data)):
+    #     r = fft_data[i].real**2
+    #     j = fft_data[i].imag**2
+    #     mag.append(math.sqrt(r+j))
+
     return freq_hz
 
 
