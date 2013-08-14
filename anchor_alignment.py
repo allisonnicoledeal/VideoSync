@@ -76,15 +76,14 @@ def generate_matrix(data, fft_bin_size, overlap):
 # http://159.226.42.3/doc/2008/A%20Robust%20Feature%20Extraction%20Algorithm%20for%20Audio%20Fingerprinting.pdf
 # http://www.satnac.org.za/proceedings/2011/papers/Software/181.pdf
 
-
 def fourier(sample):  #, overlap):
     mag = []
     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
-    for i in range(len(fft_data)):
-        # r = fft_data[i].real**2
-        # j = fft_data[i].imag**2
-        # mag.append(round(math.sqrt(r+j),2))
-        mag.append(math.log(abs(fft_data[i])))
+    for i in range(len(fft_data)/2):
+        r = fft_data[i].real**2
+        j = fft_data[i].imag**2
+        mag.append(round(math.sqrt(r+j),2))
+        # mag.append(math.log(abs(fft_data[i])))
 
     # freqs = np.fft.fftfreq(len(sample))
     # freq = freqs[index]  # only valid if index > len(fft_data)/2
@@ -144,6 +143,8 @@ def find_peaks(intensity_matrix, zone_height, zone_width, num_samples, fft_bin_s
                         if len(section) > 0:
                             max_int = max(section)  # find new max in sample
                         # print "new max int: ", max_int
+                        else:
+                            max_int = 0
                     print ""
             print "zone max: ", zone_max
             peaks.append(zone_max)
@@ -159,10 +160,10 @@ def plot_peaks(peak_tuples_list):
         for j in range(len(peak_tuples_list[0])):
             x.append(peak_tuples_list[i][j][1])
             y.append(peak_tuples_list[i][j][2])
-    plt.plot(x,y,'kx')
-    plt.show()
+    # plt.plot(x,y,'kx')
+    # plt.show()
 
-    # return x, y
+    return x, y
 
 
 
@@ -187,13 +188,13 @@ def plot_freq(base_freqs, sample_freqs):  # argument is list of freq-time tuples
 
 
     plt.subplot(2, 1, 1)
-    plt.plot(x_base, y_base, 'ko-')
+    plt.plot(x_base, y_base, 'ko')
     plt.title('Base')
     plt.xlabel('Time')
     plt.ylabel('Frequency')
 
     plt.subplot(2, 1, 2)
-    plt.plot(x_sample, y_sample, 'ko-')
+    plt.plot(x_sample, y_sample, 'ko')
     plt.title('Sample')
     plt.xlabel('Time')
     plt.ylabel('Frequency')
@@ -216,11 +217,26 @@ dir="./uploads/"
 # TESTS
 sound_base = extract_audio(dir, str(video1_base))
 audio_base = read_audio(sound_base)
-matrix_base = generate_matrix(audio_base[:44100*10], 512, 1024*0)
-# peaks = find_peaks(matrix_base, 500, 250, 500, 1024)
-peaks = find_peaks(matrix_base, 300, 250, 200, 512)
+matrix_base = generate_matrix(audio_base[:44100*10], 1024, 1024*0)
+peaks_base = find_peaks(matrix_base, 50, 50, 100, 1024)
+x_b, y_b = plot_peaks(peaks_base)
 
-plot_peaks(peaks)
+plt.subplot(2, 1, 1)
+plt.plot(x_b, y_b, 'ko')
+
+sound_sample = extract_audio(dir, str(video2_sample))
+audio_sample = read_audio(sound_sample)
+matrix_sample = generate_matrix(audio_sample[:44100*10], 1024, 1024*0)
+peaks_sample = find_peaks(matrix_sample, 50, 50, 100, 1024)
+x_s, y_s = plot_peaks(peaks_sample)
+
+
+plt.subplot(2, 1, 2)
+plt.plot(x_s, y_s, 'ko')
+
+plt.show()
+
+
 
 
 # base3 = freq_list(base2)
