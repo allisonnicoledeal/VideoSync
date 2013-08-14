@@ -38,7 +38,7 @@ def read_audio(audio_file):
 
     filename = audio_file.split(".")
     print 'FILENAME: ', filename
-    output = "./" + filename[0] + "_1." + filename[1]
+    output = "./" + filename[1] + "_1." + filename[2]
     call(["sox", audio_file, output, "channels", "1"])
     rate, data = scipy.io.wavfile.read(output)  # Return the sample rate (in samples/sec) and data from a WAV file
     # print "RATE: ", rate  # !! RETURN RATE
@@ -103,19 +103,18 @@ def channel_avg(raw_data_matrix):
 # OUTPUT: list of real values len of num samples per second
 # Reference: http://stackoverflow.com/questions/3694918/how-to-extract-frequency-associated-with-fft-values-in-python
 def fourier(sample):  #, overlap):
+    mag = []
     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
+    for i in range(len(fft_data)):
+        r = fft_data[i].real**2
+        j = fft_data[i].imag**2
+        mag.append(math.sqrt(r+j))
+
     freqs = np.fft.fftfreq(len(sample))  #, overlap) #dont have to recalculate for each sample, pass as parameter
-    mag = abs(fft_data) # not necessary
-    mag2 = mag**2
-    index = np.argmax(mag2)
+
+    index = np.argmax(mag)
     freq = freqs[index]  # only valid if index > len(fft_data)/2
     freq_hz = abs(freq*sample_rate)
-
-    #     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
-    # for i in range(len(fft_data)):
-    #     r = fft_data[i].real**2
-    #     j = fft_data[i].imag**2
-    #     mag.append(math.sqrt(r+j))
 
     return freq_hz
 
@@ -262,17 +261,17 @@ def align(video1_base, video2_sample, dir):
 
 # # video1_base = "Gold.mp4"
 # # video2_sample = "HipClip.mp4"
-# v1 = "ReginaPrayerYaTFoYVGWBk.mp4"
-# v2 = "ReginaPrayerDUtDOS-7mkg.mp4"
-v1 = "regina6POgShQ-lC4.mp4"
-v2 = "reginaJo2cUWpILMg.mp4"
+v1 = "ReginaPrayerYaTFoYVGWBk.mp4"
+v2 = "ReginaPrayerDUtDOS-7mkg.mp4"
+# v1 = "regina6POgShQ-lC4.mp4"
+# v2 = "reginaJo2cUWpILMg.mp4"
 # video1_base = "Gold.mp4"
 # video2_sample = "Gold.mp4"
 # video2_sample = "Reg2.mp4"
 # v2 = "tessalateoGIjeYNlOXE.mp4" # sample
 # v1 = "tessalateBLZQmqJ6Yos.mp4" # base
 
-# secs, sound_base, b0, b1, b2, b3, sound_sample, s0, s1, s2, s3, start_points, alignment= align(v1, v2, "./uploads/")
+secs, sound_base, b0, b1, b2, b3, sound_sample, s0, s1, s2, s3, start_points, alignment= align(v1, v2, "./uploads/")
 
 
 

@@ -81,9 +81,10 @@ def fourier(sample):  #, overlap):
     mag = []
     fft_data = np.fft.fft(sample)  # Returns real and complex value pairs
     for i in range(len(fft_data)):
-        r = fft_data[i].real**2
-        j = fft_data[i].imag**2
-        mag.append(math.sqrt(r+j))
+        # r = fft_data[i].real**2
+        # j = fft_data[i].imag**2
+        # mag.append(round(math.sqrt(r+j),2))
+        mag.append(math.log(abs(fft_data[i])))
 
     # freqs = np.fft.fftfreq(len(sample))
     # freq = freqs[index]  # only valid if index > len(fft_data)/2
@@ -99,47 +100,69 @@ def find_peaks(intensity_matrix, zone_height, zone_width, num_samples, fft_bin_s
 
     # Define zone
     for i in range(int(len(intensity_matrix[0])/zone_width)):
-        print "i: ", i
+        # print "i: ", i
         for j in range(int(len(intensity_matrix)/zone_height)):
-            print "rows: ", len(intensity_matrix)
-            
             # Find max num_samples in zone
-            zone_max = [0]
-            print "i: ", i
-            print "j: ", j
-
-            if (i + zone_width) < len(intensity_matrix[0]):
+            zone_max = [(0, 0, 0)]
+            if (i * zone_width) < len(intensity_matrix[0]):
 
                 for k in range(zone_height):
                     x_min = i * zone_width
                     x_max = (i+1) * zone_width
                     y = (j * zone_height) + k
                     section = intensity_matrix[y][x_min:x_max]
-                    # print "section: ", section
+                    # if ((i == 0) and (j==0)):
+                    print "i ", i
+                    print "j ", j
+                    print "x min: ", x_min
+                    print "x max: ", x_max
+                    print "y: ", y
+                    print "section:", section
                     max_int = max(section)
                     # print "max intensity: ", max_int
 
-                    while (max_int > min(zone_max)):
+                    while (max_int > (min(zone_max))[0]):
                         # print "zone max: ", zone_max
 
                         x = (i * zone_width) + section.index(max_int)  # x coordinate
-                        second = (float((x*fft_bin_size)+((x+1)*fft_bin_size))/float(2.0))/float(sample_rate)
+                        print "x coord: ", x
+                        second = round((float((x*fft_bin_size)+((x+1)*fft_bin_size))/float(2.0))/float(sample_rate),2)
                         y = (j * zone_height) + k  # y coordinate
+                        print "y coord: ", y
                         frequency = freqs[y]
-                        zone_max.remove(min(zone_max)) # remove smallest number
-                        zone_max.append((max_int, frequency, second)) # replace it with larger tuple
+                        zone_max.append((max_int, x, y)) # replace it with larger tuple
+                        # zone_max.append((max_int, frequency, second)) # replace it with larger tuple
+                        section.remove(max_int)  # delete maximum element
+                        print "section: ", section
 
-                        if (len(zone_max) < num_samples):
-                            section.remove(max_int)  # delete maximum element
-                        max_int = max(section)  # find new max in sample
+                        # print len(zone_max)
+
+                        if (len(zone_max) > num_samples):
+                            zone_max.remove(min(zone_max)) # remove smallest number
+                        print "zone_max: ", zone_max
+
+                        if len(section) > 0:
+                            max_int = max(section)  # find new max in sample
                         # print "new max int: ", max_int
+                    print ""
             print "zone max: ", zone_max
             peaks.append(zone_max)
 
 
     return peaks
 
+def plot_peaks(peak_tuples_list):
+    x = []
+    y = []
 
+    for i in range(len(peak_tuples_list)):
+        for j in range(len(peak_tuples_list[0])):
+            x.append(peak_tuples_list[i][j][1])
+            y.append(peak_tuples_list[i][j][2])
+    plt.plot(x,y,'kx')
+    plt.show()
+
+    # return x, y
 
 
 
@@ -180,17 +203,26 @@ def plot_freq(base_freqs, sample_freqs):  # argument is list of freq-time tuples
 
 
 
-
+a=[[500, 500, 500, 600], [200, 200, 700, 800], [744, 753, 456, 345], [633, 533, 566, 233]]
+pks = find_peaks(a,2,2,2,1)
 
 video1_base = "regina6POgShQ-lC4.mp4"
 video2_sample = "reginaJo2cUWpILMg.mp4"
 dir="./uploads/"
 
 # def align(video1_base, video2_sample, dir):
+
+
+# TESTS
 sound_base = extract_audio(dir, str(video1_base))
 audio_base = read_audio(sound_base)
-matrix_base = generate_matrix(audio_base[:44100*10], 1024, 1024*.25)
-peaks = find_peaks(matrix_base, 256, 30, 4, 1024)
+matrix_base = generate_matrix(audio_base[:44100*10], 512, 1024*0)
+# peaks = find_peaks(matrix_base, 500, 250, 500, 1024)
+peaks = find_peaks(matrix_base, 300, 250, 200, 512)
+
+plot_peaks(peaks)
+
+
 # base3 = freq_list(base2)
 
 # sound_sample = extract_audio(dir, str(video2_sample))
