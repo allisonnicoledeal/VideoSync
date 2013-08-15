@@ -4,7 +4,7 @@ from werkzeug import secure_filename
 import model
 import convert_to_webm as convert
 import datetime
-import find_alignment
+import alignment
 
 
 UPLOAD_FOLDER = 'uploads/'
@@ -80,7 +80,7 @@ def index():
         model.session.flush()
 
         # analyze delay
-        delay = find_alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db
@@ -166,7 +166,7 @@ def watch():
         model.session.flush()
 
         # analyze delay
-        delay = find_alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db
