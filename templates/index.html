@@ -129,6 +129,7 @@
 			            {% for analysis in group.analysis_group %}
 			                <h4>Sync Point:{{analysis.sync_point}}</h4>
 			                <h4>Track:{{analysis.analysis_track.filename}}</h4>
+                            <img src={{analysis.analysis_track.youtube_url}} height="60"</img>
 			            {% endfor %}
 			            <a href="/view_event?group_id={{group.id}}">View video group {{group.id}}</a>
 		         	</div>

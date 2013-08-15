@@ -3,7 +3,7 @@
     # avconv -i ./uploads/Business.mp4 -y ./uploads/BusinessTest.webm
     # avconv -ss 00:00:15 -t 00:00:48 -i HipVsRhy.mp4 -codec copy HipClip.mp4
 
-from subprocess import call
+from subprocess import call, check_call
 
 
 def convert_video(mp4_video, dir):
@@ -22,6 +22,11 @@ def youtube_to_mp4(youtube_link, song_title, dir):
     print "youtube-dl", "-o", output, youtube_link
     return mp4_output
 
+def youtube_thumbnail(youtube_link):
+    return check_call(["youtube-dl", "--get-thumbnail", youtube_link])
 
+
+
+thumb = youtube_thumbnail("https://www.youtube.com/watch?v=Z5PPlk53IMY")
 
 # youtube_to_mp4("http://www.youtube.com/watch?v=BdBxaRng4SU", "myFlorenceTest3", "uploads/")

@@ -28,6 +28,7 @@ class Track(Base):
     path = Column(String(128), nullable=True)
     filename_webm = Column(String(64), nullable=True)
     youtube_url = Column(String(256), nullable=True)
+    thumbnail_url = Column(String(64), nullable=True)
 
     # analysis_track
 
