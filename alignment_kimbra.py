@@ -33,8 +33,8 @@ def read_audio(audio_file):
 
     filename = audio_file.split(".")
     print 'FILENAME: ', filename
-    # output = "./" + filename[0] + "_1." + filename[1]
-    output = "." + filename[1] + "_1." + filename[2]
+    output = "./" + filename[0] + "_1." + filename[1]
+    # output = "." + filename[1] + "_1." + filename[2]
     call(["sox", audio_file, output, "channels", "1"])
     rate, data = scipy.io.wavfile.read(output)  # Return the sample rate (in samples/sec) and data from a WAV file
     # print "RATE: ", rate  # !! RETURN RATE
@@ -278,10 +278,10 @@ def plot_freq(base_freqs, sample_freqs):  # argument is list of freq-time tuples
 # v2 = "reginaJo2cUWpILMg.mp4"
 # v2 = "tessalateoGIjeYNlOXE.mp4" # sample
 # v1 = "tessalateBLZQmqJ6Yos.mp4" # base
-v1 = "Settle2d_tj-9_dGog.mp4"
-v2 = "Settle2kFaZIKtcn6s.mp4"
+# v1 = "Settle2d_tj-9_dGog.mp4"
+# v2 = "Settle2kFaZIKtcn6s.mp4"
 
-directory="./uploads/"
+# directory="./uploads/"
 
 def align(video1_base, video2_sample, dir):
 
@@ -317,14 +317,14 @@ def align(video1_base, video2_sample, dir):
     delay2 = offsets_sorted2[-1]
     print delay2
 
-    x_b, y_b = plot_peaks(peaks_b)
-    plt.subplot(2, 1, 1)
-    plt.plot(x_b, y_b, 'kx')
-    x_s, y_s = plot_peaks(peaks_s)
-    plt.subplot(2, 1, 2)
-    plt.plot(x_s, y_s, 'kx')
+    # x_b, y_b = plot_peaks(peaks_b)
+    # plt.subplot(2, 1, 1)
+    # plt.plot(x_b, y_b, 'kx')
+    # x_s, y_s = plot_peaks(peaks_s)
+    # plt.subplot(2, 1, 2)
+    # plt.plot(x_s, y_s, 'kx')
 
-    plt.show()
+    # plt.show()
 
     if delay2[0] > 0:
         return (float(delay2[0])/43, 0)
@@ -332,7 +332,7 @@ def align(video1_base, video2_sample, dir):
         return (0, abs(float(delay2[0])/43))
 
 
-delta_t = align(v1, v2, directory)
+# delta_t = align(v1, v2, directory)
 # print delta_t
 
 # base3 = freq_list(base2)

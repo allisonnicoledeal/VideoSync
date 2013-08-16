@@ -4,7 +4,7 @@ from werkzeug import secure_filename
 import model
 import convert_to_webm as convert
 import datetime
-import alignment
+import alignment_ingrid
 
 
 UPLOAD_FOLDER = 'uploads/'
@@ -55,8 +55,8 @@ def index():
             new_filename2 = convert.youtube_to_mp4(url2, new_title, UPLOAD_FOLDER)
             new_youtube_url1 = "http://www.youtube.com/embed/" + url1[-11:]
             new_youtube_url2 = "http://www.youtube.com/embed/" + url2[-11:]
-            new_thumbnail1 = convert.youtube_thumbnail("url1")
-            new_thumbnail2 = convert.youtube_thumbnail("url2")
+            new_thumbnail1 = convert.youtube_thumbnail(url1)
+            new_thumbnail2 = convert.youtube_thumbnail(url2)
             
         # save file 1
         # new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
@@ -82,7 +82,7 @@ def index():
         model.session.flush()
 
         # analyze delay
-        delay = alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment_ingrid.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db
@@ -168,7 +168,7 @@ def watch():
         model.session.flush()
 
         # analyze delay
-        delay = alignment.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment_ingrid.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db

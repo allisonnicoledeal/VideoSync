@@ -4,6 +4,8 @@
     # avconv -ss 00:00:15 -t 00:00:48 -i HipVsRhy.mp4 -codec copy HipClip.mp4
 
 from subprocess import call, check_call
+import os
+import envoy
 
 
 def convert_video(mp4_video, dir):
@@ -23,10 +25,12 @@ def youtube_to_mp4(youtube_link, song_title, dir):
     return mp4_output
 
 def youtube_thumbnail(youtube_link):
-    return check_call(["youtube-dl", "--get-thumbnail", youtube_link])
+    exe = "youtube-dl --get-thumbnail "+ youtube_link
+    output = envoy.run(exe.encode('ascii'))
+    output_str = output.std_out
+    return output_str
 
 
 
-thumb = youtube_thumbnail("https://www.youtube.com/watch?v=Z5PPlk53IMY")
-
+# thumb = youtube_thumbnail("https://www.youtube.com/watch?v=Z5PPlk53IMY")
 # youtube_to_mp4("http://www.youtube.com/watch?v=BdBxaRng4SU", "myFlorenceTest3", "uploads/")
