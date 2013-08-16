@@ -2,56 +2,98 @@
 <html lang="en">
 <head>
     <title>Video Sync</title>
+
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 
     <style type="text/css">
 
+    .container{
+        background: #ffffff;
+    }
     .span12{
-    	background: black;
-    	color: white;
-    	padding: 0px 0;
     	text-align:center;
 	}
 
     .span6, .span4{
-		background: blue;
-		color: white;
+		background: #ffffff;
+        color: #000000;
 		text-align:center;
 		margin-top: 15px;
+        margin-left: 30px;
 	}
 
 	.span3{
-    	background: purple;
-    	color: white;
-    	padding: 0px 0;
-    	text-align:center;
     	margin-top: 15px;
+    }
+    #videoInfo{
+        color: #000000;
+        text-align: right;
+        padding-bottom: 0px;
+        padding-left: 0px;
+    }
+    #buttonRow{
+        padding-top: 10px;
+        background: #ffffff;
+    }
+    #thumbnail-info{
+        text-align: left;
+        padding-left: 60px;
+        margin-top: 0px;
+    }
+    #rightVideo, #leftVideo{
+        margin-left: 0px;
+        margin-right: 0px;
 
-	}
-	.span8{
-    	background: pink;
-    	color: white;
-    	text-align:center;
-		margin-top: 15px;
-	}
-
-	.span5, .span7, .span2{
-    	background: yellow;
-    	color: black;
-    	padding: 0px 0;
-    	text-align:center;
-		margin-top: 15px;
+    }
+    #uploadInfo{
+        margin-right: 0px;
+        text-align: left;
+        padding-left: 60px;
+        padding-right: 0px;
+        background: #d6d6e1;
+    }
+    .controls{
+        text-align: center;
+    }
+    #thumbRow{
+        margin-left: 0px;
+        margin-bottom: 15px;
     }
     #data-2{
+        text-align: left;
+        margin-left: 0px;
+        background: #000000;
+
+    }    
+    #data-1{
+        text-align: right;
         margin-right: 0px;
-        margin-left: 10px;
+        margin-left: 45px;
+        background: #000000;
 
     }
-    #playAll{
-        border: 10px;
-
+    #displayVideos{
+        margin-top: -5px;
+    }
+    h6{
+        line-height: 5px;
+    }
+    #header-text{
+        margin-left: 45px;
+        padding-left: 0px;
+        padding-right: 0px;
+        background: #d6d631;
 
     }
+
+
+
+
+
+
+
 	
 
 
@@ -63,13 +105,23 @@
 
 	<div class="container">
 
-		<div class="row">
-			<div class="span12">
+		<div id="heading" class="row">
+			<div id="header-text" class="span6">
 				<h1>Video Sync</h1>
+            </div>
+            <div id="videoInfo" class="span5">
+                <p> </p></br>
+                Title: {{video1.title}} </br>
+                Artist: {{video1.artist}} </br>
+                Event: {{video1.event}} </br>
 			</div>
 		</div>
+        <div class="row">
 
-		<div class="row">
+
+        </div>
+
+		<div id="displayVideos" class="row">
 				<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
 		            <div id="iframe-1"></div>               
 		        </div>
@@ -79,67 +131,101 @@
 		</div>
 
 		<div class="row">
-			<div class="span4">
-				Title: {{video1.title}}
-				Artist: {{video1.artist}}
-				Event: {{video1.event}}
-			</div>
-			<div class="span8">
-				<button id="playAll" class="btn" disabled>Play</button>
-        		<button id="pauseAll" class="btn" disabled>Pause</button>
-			</div>
-		</div>	
+            <div id="buttonRow" class="span12">
+                <button id="playAll" class="btn btn-primary" disabled><i class="icon-play icon-5x"></i></button>
+                <button id="pauseAll" class="btn" disabled><i class="icon-pause icon-5x"></i></button>
+            </div>
+        </div>
+
 
 
 		<div class="row">
-			<div class="span4">
-				<form class="form-horizontal" method="post">
+			<div id="uploadInfo" class="span4">
+                <h3>Synchronize a new video set</h3>
+				<form class="form" method="post">
 					<div class="control-group">
-						<label class="control-label" for="title">Title</label>
+						<label class="control-label" for="title"></label>
 						<div class="controls">
 							<input type="text" class="span2" name="title" placeholder="Title"/><br/>
 						</div>
 					</div>
 					<div class="control-group">
-				        <label class="control-label" for="artist">Artist</label>
+				        <label class="control-label" for="artist"></label>
 						<div class="controls">
 				        	<input type="text" class="span2" name="artist" placeholder="Artist"/><br/>
 						</div>
 					</div>
 
 					<div class="control-group">
-				        <label class="control-label" for="event">Event</label>
+				        <label class="control-label" for="event"></label>
 						<div class="controls">
 				        	<input type="text" class="span2" name="event" placeholder="Event"/><br/>
 						</div>
 					</div>
+                    <h5>Use a YouTube link</h5>
+                    <div class="control-group">
+                        <label class="control-label" for="url1"></label>
+                        <div class="controls">
+                            <input type="text" class="span3" name="url1" placeholder="Youtube URL"><br/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="url2"></label>
+                        <div class="controls">
+                            <input type="text" class="span3" name="url2" placeholder="Youtube URL"><br/>
+                        </div>
+                    </div>
 
-				        <input type="file" class="span3" name="file1"><br/>
-				        <input type="file" class="span3" name="file2"><br/>
+                    <h5>or upload a video</h5>
+                    <div class="control-group">
+                        <label class="control-label" for="file1"></label>
+                        <div class="controls">
+                            <input type="file" class="span3" name="file1"><br/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="file2"></label>
+                        <div class="controls">
+                            <input type="file" class="span3" name="file2"><br/>
+                        </div>
+                    </div>
 
-				        <label class="control-label" for="url1">Youtube URL</label>
-				        <input type="text" class="span3" name="url1" placeholder="Youtube URL"><br/>
-				        <label class="control-label" for="url2">Youtube URL</label>
-				        <input type="text" class="span3" name="url2" placeholder="Youtube URL"><br/>
+
+
+
+
 
 				        <button class="btn btn-primary" type="submit">Upload</button>
 				   
 			    </form>
 			</div>
-			<div class="span8">
+			<div class="span7">
 				{% for group in groups %}
-					<div class="row-fluid no-space">
-			            <h3>Group:{{group.id}}</h3>
+					<div id="thumbRow" class="row">
 			            {% for analysis in group.analysis_group %}
-                            <div class="span4">
-			                <p>Sync Point:{{analysis.sync_point}}</p>
-			                <p>Track:{{analysis.analysis_track.filename}}</p>
-                            <img src="{{analysis.analysis_track.thumbnail_url}}" height="150" width="150"></img>
-                            </div>
-			            {% endfor %}
-			            <a href="/view_event?group_id={{group.id}}">View video group {{group.id}}</a>
+                            {% if loop.index == 1 %}
+                                <div id="leftVideo" class="span3">
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="right"></img></a>
+                                </div>
+                            {% endif %}
+                            {% if loop.index == 2 %}
+                                <div id="rightVideo" class="span3">
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
+                                </div>
+                                <div class="row">
+                                    <div id="thumbnail-info" class="span6">
+                                        <h6>{{analysis.analysis_track.title}}</h6>
+                                        <h6>{{analysis.analysis_track.artist}}</h6>
+                                        <h6>{{analysis.analysis_track.event}}</h6>
+
+        			                    </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
 		         	</div>
-		        {% endfor %}
+                {% endfor %}
 
 		    </div>
                            
@@ -190,7 +276,7 @@
                 height: '400',
                 width: '470',
                 videoId: data1.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 1},
+                playerVars: {'autoplay': 0, 'controls': 0},
                 events: {
                 'onReady': onPlayerReady,
                 // 'onStateChange': onPlayerStateChange
@@ -201,7 +287,7 @@
                 height: '400',
                 width: '470',
                 videoId: data2.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 1},
+                playerVars: {'autoplay': 0, 'controls': 0},
                 events: {
                 'onReady': onPlayerReady,
                 // 'onStateChange': onPlayerStateChange
