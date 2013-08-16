@@ -1,0 +1,3 @@
+This VideoSync web application automatically synchronizes and combines personal and crowd-sourced YouTube video clips to recreate a live concert experience from multiple angles. Video alignment is determined by applying signal processing methods to the audio portion of the file and uses time-frequency constellation analysis to determine when the songs overlap.
+
+This project utilizes JavaScript, YouTube Player API, HTML5, and Bootstrap for front end development and Python, Flask, and SQLAlchemy for the back end and signal processing algorithms.
