@@ -4,7 +4,7 @@ from werkzeug import secure_filename
 import model
 import convert_to_webm as convert
 import datetime
-import alignment_ingrid
+import alignment_by_row_channels
 
 
 UPLOAD_FOLDER = 'uploads/'
@@ -21,8 +21,8 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    video1 = model.session.query(model.Track).get(23)
-    video2 = model.session.query(model.Track).get(24)
+    video1 = model.session.query(model.Track).get(55)
+    video2 = model.session.query(model.Track).get(56)
     groups = model.session.query(model.Group).all()
 
     if request.method == 'POST':
@@ -82,7 +82,7 @@ def index():
         model.session.flush()
 
         # analyze delay
-        delay = alignment_ingrid.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment_by_row_channels.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db
@@ -168,7 +168,7 @@ def watch():
         model.session.flush()
 
         # analyze delay
-        delay = alignment_ingrid.align(new_filename1, new_filename2, UPLOAD_FOLDER)
+        delay = alignment_by_row_channels.align(new_filename1, new_filename2, UPLOAD_FOLDER)
         # delay = (0, 5)
 
         # save analysis into db

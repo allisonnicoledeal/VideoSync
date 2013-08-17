@@ -3189,7 +3189,7 @@ table th[class*="span"],
 
 button.close {
   padding: 0;
-  cursor: pointer;
+  cursor: pointer
   background: transparent;
   border: 0;
   -webkit-appearance: none;
