@@ -34,7 +34,7 @@ def read_audio(audio_file):
     filename = audio_file.split(".")
     print 'FILENAME: ', filename
     # output = "./" + filename[0] + "_1." + filename[1]
-    output = "." + filename[1] + "_1." + filename[2]
+    output = "./" + filename[0] + "_1." + filename[1]
     call(["sox", audio_file, output, "channels", "1"])
     rate, data = scipy.io.wavfile.read(output)  # Return the sample rate (in samples/sec) and data from a WAV file
     # print "RATE: ", rate  # !! RETURN RATE
@@ -91,6 +91,23 @@ def fourier(sample):  #, overlap):
 
     return mag
 
+
+# def make_bins(intensity_matrix, zone_height, zone_width):
+#     samples = []
+#     for i in range(int(len(intensity_matrix[0])/zone_width)):
+#             for j in range(int(len(intensity_matrix)/zone_height)):
+#                 bin_data = []
+#                 for k in range(zone_height):
+#                     x_min = i * zone_width
+#                     x_max = (i+1) * zone_width
+#                     y = (j * zone_height) + k
+#                     section = intensity_matrix[y][x_min:x_max]
+#                     bin_data.append()
+
+
+
+
+# def find_bin_peaks():
 
 def find_peaks(intensity_matrix, zone_height, zone_width, num_samples, fft_bin_size):  #num samples per zone
     peaks = []  # tuples of time and freq
@@ -152,6 +169,16 @@ def find_peaks(intensity_matrix, zone_height, zone_width, num_samples, fft_bin_s
 
     return peaks
 
+
+def make_peaks_list(peaks):
+    peaks_list = []
+    for i in range(len(peaks)):
+        for j in range(len(peaks[0])):
+            peaks_list.append(peaks[i][j])
+    return peaks_list
+
+
+
 def plot_peaks(peak_tuples_list):
     x = []
     y = []
@@ -164,6 +191,30 @@ def plot_peaks(peak_tuples_list):
     # plt.show()
 
     return x, y
+
+
+def time_diff(peak_list_base, peak_list_sample, err):
+    time_deltas= {}
+    for i in range(len(peak_list_sample)):
+        for j in range(len(peak_list_base)):
+            # if freqs match
+            # print peak_list_sample[i][2]
+            # print peak_list_base[j][2]
+            if ((peak_list_sample[i][2] < peak_list_base[j][2] + err) and (peak_list_sample[i][2] > peak_list_base[j][2] - err)):  # tuple is (intensity, x(time), y(freq))
+                
+                # print "found freq match"
+                # calculate time difference
+                time_diff = peak_list_sample[i][1] - peak_list_base[j][1]
+                #if dictionary entry, 
+                if time_diff in time_deltas.keys():
+                    # add one to number of instances time differenc occurs
+                    time_deltas[time_diff] += 1
+                    # print "added to dict"
+                # else
+                else:
+                    # create new dict entry w value of 1
+                    time_deltas[time_diff] = 1
+    return time_deltas
 
 
 
@@ -204,12 +255,15 @@ def plot_freq(base_freqs, sample_freqs):  # argument is list of freq-time tuples
 
 
 
-a=[[500, 500, 500, 600], [200, 200, 700, 800], [744, 753, 456, 345], [633, 533, 566, 233]]
-pks = find_peaks(a,2,2,2,1)
+# a=[[500, 500, 500, 600], [200, 200, 700, 800], [744, 753, 456, 345], [633, 533, 566, 233]]
+# pks = find_peaks(a,2,2,2,1)
 
-video1_base = "regina6POgShQ-lC4.mp4"
-video2_sample = "reginaJo2cUWpILMg.mp4"
-dir="./uploads/"
+# video1_base = "regina6POgShQ-lC4.mp4"
+# # video2_sample = "reginaJo2cUWpILMg.mp4"
+video2_sample = "tessalateoGIjeYNlOXE.mp4" # sample
+video1_base = "tessalateBLZQmqJ6Yos.mp4" # base
+
+dir='uploads/'
 
 # def align(video1_base, video2_sample, dir):
 
@@ -217,24 +271,41 @@ dir="./uploads/"
 # TESTS
 sound_base = extract_audio(dir, str(video1_base))
 audio_base = read_audio(sound_base)
-matrix_base = generate_matrix(audio_base[:44100*10], 1024, 1024*0)
-peaks_base = find_peaks(matrix_base, 50, 50, 100, 1024)
-x_b, y_b = plot_peaks(peaks_base)
-
-plt.subplot(2, 1, 1)
-plt.plot(x_b, y_b, 'ko')
+matrix_base = generate_matrix(audio_base[:44100*25], 1024, 1024*0)
+peaks_base = find_peaks(matrix_base, 80, 80, 20, 1024)
+peaks_list_base = make_peaks_list(peaks_base)
+# x_b, y_b = plot_peaks(peaks_base)
+# plt.subplot(2, 1, 1)
+# plt.plot(x_b, y_b, 'ko')
 
 sound_sample = extract_audio(dir, str(video2_sample))
 audio_sample = read_audio(sound_sample)
-matrix_sample = generate_matrix(audio_sample[:44100*10], 1024, 1024*0)
-peaks_sample = find_peaks(matrix_sample, 50, 50, 100, 1024)
-x_s, y_s = plot_peaks(peaks_sample)
+matrix_sample = generate_matrix(audio_sample[:44100*25], 1024, 1024*0)
+peaks_sample = find_peaks(matrix_sample, 80, 80, 20, 1024)
+peaks_list_sample = make_peaks_list(peaks_sample)
+
+offsets = time_diff(peaks_list_base, peaks_list_sample, 6)
+offsets_sorted = sorted(offsets.items(), key=lambda x: x[1])
+print offsets_sorted
+
+delay = offsets_sorted[-1][0]
+sec_delay = float(delay)/float(43)
+print sec_delay
+
+# if sec_delay > 0:
+#     return (0, abs(sec_delay))
+# else:
+#     return (sec_delay, 0)
 
 
-plt.subplot(2, 1, 2)
-plt.plot(x_s, y_s, 'ko')
+# d = align(v2, v1, 'uploads/')
 
-plt.show()
+
+# x_s, y_s = plot_peaks(peaks_sample)
+# plt.subplot(2, 1, 2)
+# plt.plot(x_s, y_s, 'ko')
+
+# plt.show()
 
 
 

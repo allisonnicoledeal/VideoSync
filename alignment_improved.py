@@ -282,12 +282,12 @@ def make_stereo(base_file, sample_file, sec_delay, dir):
     call(["sox", base_input, base_output, "trim", seconds])
     # combine L R channels
     sample_input = sample_file
-    stereo_output = "stereo.wav"
+    stereo_output = "stereoDaniel.wav"
     call(["sox", "-M", base_output, sample_input, stereo_output])
     return stereo_output
 
 
-stereo = mame
+
 
 
 
