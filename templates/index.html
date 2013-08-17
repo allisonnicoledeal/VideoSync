@@ -27,22 +27,43 @@
 	.span3{
     	margin-top: 15px;
     }
+    h1 {
+        font-size: 70px;
+    }
+    #header-text{
+        margin-left: 45px;
+        padding-top: 40px;
+        padding-left: 20px;
+        padding-right: 0px;
+        padding-bottom: 5px;
+        background: #F7F6F4;
+        font-family: "Qualitystreet", "albura","Helvetica Neue",Helvetica,Arial,sans-serif;
+
+    }
     #videoInfo{
         color: #000000;
         text-align: right;
-        padding-bottom: 20px;
-        padding-left: -10px;
-        background: #e2e2e2;
+        padding-top: 50px;
+        padding-bottom: 0px;
+        padding-left: -20px;
+        padding-right: 20px;
+        background: #F7F6F4;
         margin-left: 0px;
+        width: 530px;
+        font-family: "proxima-nova","Helvetica Neue",Helvetica,Arial,sans-serif
     }
     #buttonRow{
         padding-top: 10px;
         background: #ffffff;
+        font-size: 13px;
     }
     #thumbnail-info{
         text-align: left;
         padding-left: 60px;
-        margin-top: 0px;
+        padding-bottom: 10px;
+        margin-top: 5px;
+        background: ##E4E3E1;
+        color: black;
     }
     #rightVideo, #leftVideo{
         margin-left: 0px;
@@ -52,51 +73,63 @@
     #uploadInfo{
         margin-right: 0px;
         margin-left: 20px;
+        margin-top: 10px;
         text-align: left;
         padding-left: 60px;
-        padding-right: 35px;
-        background: #d6d6e1;
+        padding-right: 30px;
+        padding-top: 5px;
+        background: #F0EFED;
     }
     .controls{
-        text-align: center;
+        text-align: left;
+        margin-left: 40px;
+        height: 40px;
     }
     #thumbRow{
-        margin-left: 0px;
+        margin-left: -15px;
         margin-bottom: 15px;
+        margin-top: -5px;
+        background: #F0EFED;
+        width: 655px;
     }
     #data-2{
         text-align: left;
         margin-left: 0px;
-        background: #000000;
+        background: #36363E;
+        margin-bottom: -25px;
+        height: 400px;
 
     }    
     #data-1{
         text-align: right;
         margin-right: 0px;
         margin-left: 45px;
-        background: #000000;
-
+        background: #36363E;
+        height: 400px;
     }
     #displayVideos{
         margin-top: -20px;
+        height: 415px;
     }
     h6{
         line-height: 5px;
     }
-    #header-text{
-        margin-left: 45px;
-        padding-left: 10px;
-        padding-right: 0px;
-        padding-bottom: 5px;
-        background: #e2e2e2;
 
-    }
     #uploadRow{
         margin-left: 0px;
+        padding-top: 0px;
+        margin-top: 0px;
     }
     #uploadButton{
         text-align: center;
         margin-left: 100px
+
+    }
+    #controls{
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    #uploadText{
 
     }
     #sync{
@@ -120,14 +153,41 @@ div.upload input {
     overflow: hidden !important;
 }
 
+.btn-custom-lighten.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+.btn-custom-lighten {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #3f3f4b;
+  background-image: -moz-linear-gradient(top, #363640, #4d4d5c);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#363640), to(#4d4d5c));
+  background-image: -webkit-linear-gradient(top, #363640, #4d4d5c);
+  background-image: -o-linear-gradient(top, #363640, #4d4d5c);
+  background-image: linear-gradient(to bottom, #363640, #4d4d5c);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff363640', endColorstr='#ff4d4d5c', GradientType=0);
+  border-color: #4d4d5c #4d4d5c #2a2a32;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #4d4d5c;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
-
-
-
-
-
-	
-
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.btn-custom-lighten:hover,
+.btn-custom-lighten:focus,
+.btn-custom-lighten:active,
+.btn-custom-lighten.active,
+.btn-custom-lighten.disabled,
+.btn-custom-lighten[disabled] {
+  color: #ffffff;
+  background-color: #4d4d5c;
+  *background-color: #42424e;
+}
+.btn-custom-lighten:active,
+.btn-custom-lighten.active {
+  background-color: #363640 ;
+}
 
 	</style>
 
@@ -139,15 +199,15 @@ div.upload input {
 
 		<div id="heading" class="row">
 			<div id="header-text" class="span6">
-				<h1>Video Sync</h1>
+				<h1>VideoSync</h1>
 
             </div>
             <div id="videoInfo" class="span6">
-                <p> </br>
-                {{video1.title}}  <i class="icon-ellipsis-vertical"></i>
-                {{video1.artist}}  <i class="icon-circle"></i>
+                <h5> </br>
+                {{video1.title}}  -
+                {{video1.artist}}  -
                 {{video1.event}}
-                </p>
+                </h5>
             </div>
 
 		</div>
@@ -167,8 +227,9 @@ div.upload input {
 
 		<div class="row">
             <div id="buttonRow" class="span12">
-                <button id="playAll" class="btn" disabled><i class="icon-play icon-5x"></i></button>
-                <button id="pauseAll" class="btn" disabled><i class="icon-pause icon-5x"></i></button>
+                    <button id="playAll" class="btn" disabled><i class="icon-play icon-5x"></i></button> 
+                    h
+                    <button id="pauseAll" class="btn" disabled><i class="icon-pause icon-5x"></i></button>
             </div>
         </div>
 
@@ -197,7 +258,7 @@ div.upload input {
 				        	<input type="text" class="span2" name="event" placeholder="Event"/><br/>
 						</div>
 					</div>
-                    <h5>Use a YouTube link</h5>
+                    <div class"uploadText" ><h5>Use a YouTube link</h5></div>
                     <div class="control-group">
                         <label class="control-label" for="url1"></label>
                         <div class="controls">
@@ -225,11 +286,11 @@ div.upload input {
                         </div>
                     </div>
                     <div class"synch">
-				        <button id="uploadButton" class="btn btn-primary" type="submit">Synchronize</button>
+				        <button id="uploadButton" class="btn btn-custom-lighten" type="submit">Synchronize</button>
 				    </div>
 			    </form>
 			</div>
-			<div class="span7">
+			<div class="span6">
 				{% for group in groups %}
 					<div id="thumbRow" class="row">
 			            {% for analysis in group.analysis_group %}
@@ -243,10 +304,10 @@ div.upload input {
                                 <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
                                 </div>
                                 <div class="row">
-                                    <div id="thumbnail-info" class="span6">
-                                        <h6>{{analysis.analysis_track.title}}</h6>
-                                        <h6>{{analysis.analysis_track.artist}}</h6>
-                                        <h6>{{analysis.analysis_track.event}}</h6>
+                                    <div id="thumbnail-info" class="span3">
+                                        <b>{{analysis.analysis_track.artist}}</b></br>
+                                        {{analysis.analysis_track.title}}</br>
+                                        <em>{{analysis.analysis_track.event}}</em>
 
         			                    </a>
                                     </div>
@@ -306,7 +367,7 @@ div.upload input {
                 height: '400',
                 width: '470',
                 videoId: data1.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 0},
+                playerVars: {'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'showinfo': 0},
                 events: {
                 'onReady': onPlayerReady,
                 // 'onStateChange': onPlayerStateChange
@@ -317,7 +378,7 @@ div.upload input {
                 height: '400',
                 width: '470',
                 videoId: data2.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 0},
+                playerVars: {'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'showinfo': 0},
                 events: {
                 'onReady': onPlayerReady,
                 // 'onStateChange': onPlayerStateChange
