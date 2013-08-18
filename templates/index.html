@@ -62,7 +62,6 @@
         padding-left: 60px;
         padding-bottom: 10px;
         margin-top: 5px;
-        background: ##E4E3E1;
         color: black;
     }
     #rightVideo, #leftVideo{
@@ -78,7 +77,7 @@
         padding-left: 60px;
         padding-right: 30px;
         padding-top: 5px;
-        background: #F0EFED;
+        background: #cecbc0;
     }
     .controls{
         text-align: left;
@@ -87,9 +86,8 @@
     }
     #thumbRow{
         margin-left: -15px;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
         margin-top: -5px;
-        background: #F0EFED;
         width: 655px;
     }
     #data-2{
@@ -122,22 +120,35 @@
     }
     #uploadButton{
         text-align: center;
-        margin-left: 100px
+        margin-left: 100px;
+        font-size: 18px;
+        padding: 10px;
 
     }
     #controls{
         margin-top: 0px;
         margin-bottom: 0px;
     }
-    #uploadText{
-
+    .darkRow{
+        background: #F7F6F2;
     }
+    .lightRow{
+        background: #e6e5e0;
+    }
+    .playLink{
+        width: 43px;
+        padding-right: 0px;
+        margin-right: px;
+        text-align: center;
+    }
+
     #sync{
         text-align: center;
     }
     .file-upload{
         position: relative;
     }
+
     div.upload {
     width: 157px;
     height: 57px;
@@ -227,7 +238,7 @@ div.upload input {
 
 		<div class="row">
             <div id="buttonRow" class="span12">
-                    <button id="playAll" class="btn" disabled><i class="icon-play icon-5x"></i></button> 
+                    <button id="playAll" class="btn btn-custom-lighten" disabled><i class="icon-play icon-5x"></i></button> 
                     h
                     <button id="pauseAll" class="btn" disabled><i class="icon-pause icon-5x"></i></button>
             </div>
@@ -292,7 +303,8 @@ div.upload input {
 			</div>
 			<div class="span6">
 				{% for group in groups %}
-					<div id="thumbRow" class="row">
+                    {% if loop.index % 2 == 0 %}
+					<div id="thumbRow" class="row darkRow">
 			            {% for analysis in group.analysis_group %}
                             {% if loop.index == 1 %}
                                 <div id="leftVideo" class="span3">
@@ -304,7 +316,7 @@ div.upload input {
                                 <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
                                 </div>
                                 <div class="row">
-                                    <div id="thumbnail-info" class="span3">
+                                    <div id="thumbnail-info" class="span3 darkRow">
                                         <b>{{analysis.analysis_track.artist}}</b></br>
                                         {{analysis.analysis_track.title}}</br>
                                         <em>{{analysis.analysis_track.event}}</em>
@@ -316,6 +328,39 @@ div.upload input {
                         {% endfor %}
 
 		         	</div>
+                    {% endif %}
+                    {% if loop.index % 2 != 0 %}
+                    <div id="thumbRow" class="row lightRow">
+                        {% for analysis in group.analysis_group %}
+                            {% if loop.index == 1 %}
+                                <div id="leftVideo" class="span3">
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="right"></img></a>
+                                </div>
+                            {% endif %}
+                            {% if loop.index == 2 %}
+                                <div id="rightVideo" class="span3">
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
+                                </div>
+                            
+                                <div class="row">
+                                    <div class="playLink">
+                                        <i class="icon-play icon-3x"></i>
+                                    </div>
+                                    <div id="thumbnail-info" class="span3 lightRow">
+                                        <div>
+                                            <b>{{analysis.analysis_track.artist}}</b></br>
+                                            {{analysis.analysis_track.title}}</br>
+                                            <em>{{analysis.analysis_track.event}}</em>
+                                        </div>
+
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+
+                    </div>
+                    {% endif %}
                 {% endfor %}
 
 		    </div>
