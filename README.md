@@ -21,4 +21,11 @@ The front end utilizes HTML5, Bootstrap, JavaScript, and the YouTube Player API.
 
 
 ![Alt text](screenshots/screenshot.png "User interface")
+
+###How VideoSync Works
 ![Alt text](screenshots/diagram.png "Explanation diagram")
+* **YouTube Link:** Download YouTube videos as MP4 files with **youtube-dl** command line program.
+* **WAV File:** Strip audio from video file using the **avconv** audio/video converter. Read audio data using the Python **scipy** library.
+* **Fourier Transform of Audio Signal:** Split audio into bins and apply the Fourier transform on each bin using the **numpy** library. The Fourier transform converts each bin data from the time domain to the frequency domain.
+* **Peak Frequencies:** Identify the frequency with the highest intensity in each bin to create a peak frequency constellation.
+* **Frequency Constellation Alignment:** Determine time offset by aligning frequency constellations of the two audio files. 
