@@ -1,0 +1,215 @@
+        .container{
+            width: 970px;
+        }
+        .span12{
+            width: 940;
+        }
+        #heading {
+            background-color: #F7F6F4;
+            font-family: "Qualitystreet";
+            padding-top: 30px;
+            margin-left: 0px;
+            width: 940px;
+        }
+        #header-text h1{
+            font-size: 65px;
+        }
+
+        .video-stripe {
+            background-color: #ffffff;
+        }
+
+        .video-stripe.title {            
+            padding: 12px 0 12px 0;                        
+        }
+        .title{
+            margin-top: -60px;
+            width: 940px;
+        }
+
+        .title h1 {
+            text-align: right;
+            font-weight: bold;
+            font-size: 14px;
+            margin:0;
+            padding-right: 15px;
+            line-height: 20px;
+        }
+        .mainArtist{
+            font-weight: bold;
+        }
+        .mainArtist{
+            font-weight: normal;
+        }
+        .mainEvent{
+            font-style: italic;
+            font-weight: normal;
+
+        }
+
+
+        .control-buttons {
+            text-align: center;            
+            padding: 12px 0 12px 35px;
+        }
+
+        #data-1 {
+            text-align: left;
+            margin-left: 0px;          
+        }
+
+        #data-2 {
+            text-align: left;
+            margin-left: -100px;
+        }
+
+        .library-item {
+            margin: 0 0 5px 0;
+            padding: 14px 20px 14px 20px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;            
+        }
+
+        .library-item.odd {
+            background-color: #e6e5e0;
+        }
+
+        .library-item.even {
+            background-color: #F7F6F2;
+        }
+
+        hr {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        #upload{
+            width: 390px;
+            background-color: #D5D1C7;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+        }
+        #frame{
+            margin: 5px 20px 5px 5px;
+            background-color: #B4B4AA;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            width: 380px;
+            
+        }
+        #uploadDetails{
+            padding-left: 20px;
+            padding-top: 10px;
+            padding-bottom: 15px;
+            width: 350px;
+
+        }
+        .controls{
+            padding-left: 45px;
+        }
+
+        .artist {
+            font-weight: bold;
+            display: block;
+        }
+
+        .track-title {
+            margin-right: 4px;
+            display: block;
+        }
+
+        .event {
+            font-style: italic;
+            display: block;
+        }
+        .file{
+            position: relative;
+            text-align: right;
+            -moz-opacity:0;
+            filter:alpha(opacity:0);
+            z-index: 2;
+            opacity: 0;
+        }
+        .file-inputs{
+            position: relative;
+        }
+        .fakefile{
+            position: absolute;
+            top: 0px;
+            left: 0px
+            z-index: 1;
+        }
+        
+        .synch{
+            margin-left: 60px;
+            padding-left: 30px;
+            padding-top: 10px;
+        }
+        #uploadButton{
+            font-size: 18px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .thumbnail-info {
+            margin-left: 0px;
+            padding-top: 14px;
+            clear: both;
+        }
+
+        .thumbnail-info .button-link {
+            float: left;
+            margin-right: 10px;
+            margin-top: 11px;
+            padding-right: 7px;
+            padding-left: 7px;
+        }
+
+        .thumbnail-info div {
+            display: inline-block;
+        }
+
+        .thumb-video {
+            width: 250px;
+            float: left;
+        }
+
+        .thumb-list {  
+            width: 540px;
+            float: left;
+            margin-left: 10px;
+        }
+
+        .btn-custom-lighten.active {
+          color: rgba(255, 255, 255, 0.75);
+        }
+        .btn-custom-lighten {
+          color: #ffffff;
+          text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+          background-color: #3f3f4b;
+          background-image: -moz-linear-gradient(top, #363640, #4d4d5c);
+          background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#363640), to(#4d4d5c));
+          background-image: -webkit-linear-gradient(top, #363640, #4d4d5c);
+          background-image: -o-linear-gradient(top, #363640, #4d4d5c);
+          background-image: linear-gradient(to bottom, #363640, #4d4d5c);
+          background-repeat: repeat-x;
+          filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff363640', endColorstr='#ff4d4d5c', GradientType=0);
+          border-color: #4d4d5c #4d4d5c #2a2a32;
+          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+          *background-color: #4d4d5c;
+          /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+          filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+        }
+        .btn-custom-lighten:hover,
+        .btn-custom-lighten:focus,
+        .btn-custom-lighten:active,
+        .btn-custom-lighten.active,
+        .btn-custom-lighten.disabled,
+        .btn-custom-lighten[disabled] {
+          color: #ffffff;
+          background-color: #4d4d5c;
+          *background-color: #42424e;
+        }
+        .btn-custom-lighten:active,
+        .btn-custom-lighten.active {
+          background-color: #363640 ;
+        }

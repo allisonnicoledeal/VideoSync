@@ -1,234 +1,29 @@
+<!-- http://www.quirksmode.org/dom/inputfile.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Video Sync</title>
     <link rel="icon" type="image/png" href="static/img/favicon.ico">
-
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
     <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-
-    <style type="text/css">
-
-        #displayVideos {
-            
-        }
-        #heading {
-            background-color: #F7F6F4;
-            font-family: "Qualitystreet";
-            padding-top: 30px;
-            margin-left: 0px;
-        }
-        #header-text h1{
-            font-size: 65px;
-        }
-
-        .video-stripe {
-            background-color: #36363E;
-        }
-
-        .video-stripe.title {            
-            padding: 12px 0 12px 0;                        
-        }
-        .title{
-            margin-top: -20px;
-        }
-
-        .title h1 {
-            text-align: right;
-            font-weight: bold;
-            font-size: 17px;
-            margin:0;
-            padding: 0;
-            line-height: 20px;
-        }
-
-        .control-buttons {
-            text-align: center;            
-            padding: 12px 0 12px 0;
-        }
-
-        #data-1 {
-            text-align: right;
-            margin-left: 15px;          
-        }
-
-        #data-2 {
-            text-align: left;
-            margin-left: 0px;
-        }
-
-        .library-item {
-            margin: 0 0 5px 0;
-            padding: 14px 20px 14px 20px;
-            -moz-border-radius: 0px;
-            border-radius: 0px;            
-        }
-
-        .library-item.odd {
-            background-color: #e6e5e0;
-        }
-
-        .library-item.even {
-            background-color: #F7F6F2;
-        }
-
-        hr {
-            margin-top: 0;
-            margin-bottom: 10px;
-        }
-        #upload{
-            width: 580px;
-            background-color: #D5D1C7;
-            -moz-border-radius: 0px;
-            border-radius: 0px;
-        }
-        #frame{
-            margin: 10px 20px 10px 20px;
-            background-color: #B9B8B1;
-            -moz-border-radius: 0px;
-            border-radius: 0px;
-            
-        }
-        #uploadDetails{
-            padding-left: 105px;
-            padding-top: 10px;
-            padding-bottom: 15px;
-
-        }
-        .controls{
-            padding-left: 45px;
-        }
-
-        .artist {
-            font-weight: bold;
-            display: block;
-        }
-
-        .track-title {
-            margin-right: 4px;
-            display: block;
-        }
-
-        .event {
-            font-style: italic;
-            display: block;
-        }
-        .file{
-            position: relative;
-            text-align: right;
-            -moz-opacity:0;
-            filter:alpha(opacity:0);
-            z-index: 2;
-            opacity: 0;
-        }
-        .file-inputs{
-            position: relative;
-        }
-        .fakefile{
-            position: absolute;
-            top: 0px;
-            left: 0px
-            z-index: 1;
-        }
-        
-        .synch{
-            margin-left: 60px;
-            padding-left: 30px;
-            padding-top: 10px;
-        }
-        #uploadButton{
-            font-size: 18px;
-            padding-top: 5px;
-            padding-bottom: 5px;
-        }
-
-        .thumbnail-info {
-            margin-left: 0px;
-            padding-top: 14px;
-            clear: both;
-        }
-
-        .thumbnail-info .button-link {
-            float: left;
-            margin-right: 10px;
-            margin-top: 11px;
-            padding-right: 7px;
-            padding-left: 7px;
-        }
-
-        .thumbnail-info div {
-            display: inline-block;
-        }
-
-        .thumb-video {
-            width: 250px;
-            float: left;
-        }
-
-
-        .thumb-list {  
-            width: 580px;
-            float: right;
-            margin-left: 10px;
-        }
-
-        .btn-custom-lighten.active {
-  color: rgba(255, 255, 255, 0.75);
-}
-.btn-custom-lighten {
-  color: #ffffff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #3f3f4b;
-  background-image: -moz-linear-gradient(top, #363640, #4d4d5c);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#363640), to(#4d4d5c));
-  background-image: -webkit-linear-gradient(top, #363640, #4d4d5c);
-  background-image: -o-linear-gradient(top, #363640, #4d4d5c);
-  background-image: linear-gradient(to bottom, #363640, #4d4d5c);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff363640', endColorstr='#ff4d4d5c', GradientType=0);
-  border-color: #4d4d5c #4d4d5c #2a2a32;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  *background-color: #4d4d5c;
-  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
-
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
-}
-.btn-custom-lighten:hover,
-.btn-custom-lighten:focus,
-.btn-custom-lighten:active,
-.btn-custom-lighten.active,
-.btn-custom-lighten.disabled,
-.btn-custom-lighten[disabled] {
-  color: #ffffff;
-  background-color: #4d4d5c;
-  *background-color: #42424e;
-}
-.btn-custom-lighten:active,
-.btn-custom-lighten.active {
-  background-color: #363640 ;
-}
-
-	</style>
-
+    <link rel="stylesheet" href="/static/css/videosync.css" type="text/css">
 </head>
 
 <body>
-
 	<div class="container">
-
 		<div id="heading" class="row">
 			<div id="header-text" class="span6">
 				<h1>VideoSync</h1>
             </div>
 		</div>
-
 		<div id="displayVideos" class="row">
             <div class="span12 title">
                 <h1>
-                {{video1.title}}  -
-                {{video1.artist}}  -
-                {{video1.event}}
+                    <span class="mainTitle">{{video1.title}}</span></br>
+                    <span class="mainArtist">{{video1.artist}}</span></br>
+                    <span class="mainEvent">{{video1.event}}</span>
                 </h1>
             </div>        
             <div class="video-stripe span12">    
@@ -239,7 +34,7 @@
 		            <div id="iframe-2"></div>
 		        </div>
             </div>
-            <div class="span12 control-buttons">    
+            <div class="span9 control-buttons">    
                 <button id="playAll" class="btn btn-custom-lighten" disabled>
                     <i class="icon-play icon-3x"></i>
                 </button> 
@@ -351,174 +146,15 @@
                                 </div>
                             {% endif %}
                         {% endfor %}
-
 		         	</div>
                 {% endfor %}
-
 		    </div>
-                           
 		</div>
-
 	</div>
-
-
-
-
-
-
-
-
-
-
 	</div>
 
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript">
+    <script src="/static/js/videoSync.js" type="text/javascript"></script>
 
-        // Youtube iframe API
-        var tag = document.createElement('script');
-
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player1, player2, data1, data2;
-        var playButton, pauseButton;
-
-
-
-
-        function init() {
-            data1 = $("#data-1");
-            data2 = $("#data-2");
-            playButton = $("#playAll");
-            pauseButton = $("#pauseAll");
-
-            playButton.on("click", onPlayClick);
-            pauseButton.on("click", onPauseClick);
-        }
-
-        // Create YouTube Iframe elements
-        function onYouTubeIframeAPIReady() { // create function that creates similar elements
-            player1 = new YT.Player('iframe-1', {
-                height: '400',
-                width: '470',
-                videoId: data1.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'showinfo': 0},
-                events: {
-                'onReady': onPlayerReady,
-                // 'onStateChange': onPlayerStateChange
-                }
-            });
-
-            player2 = new YT.Player('iframe-2', {
-                height: '400',
-                width: '470',
-                videoId: data2.attr('data-source').split("embed/")[1],
-                playerVars: {'autoplay': 0, 'controls': 0, 'modestbranding': 1, 'showinfo': 0},
-                events: {
-                'onReady': onPlayerReady,
-                // 'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-
-        // Enable Play and Pause buttons if player1 and player2 videos have loaded 2%
-        function onPlayerReady(event) {
-            event.target.setPlaybackQuality("small")
-            event.target.playVideo()
-            event.target.pauseVideo()
-            window.setInterval(function() {
-                // console.log(event.target.getVideoLoadedFraction());
-                if (event.target.getVideoLoadedFraction() > .02) {
-                    event.target.readyToPlayNow = "true";
-                }
-
-                if ((player1.readyToPlayNow == "true") && (player2.readyToPlayNow == "true")) {
-                    playButton.removeAttr('disabled');
-                    pauseButton.removeAttr('disabled');
-                    // player1.playVideo();
-                    // player2.playVideo();
-                }
-            }, 500)
-        }
-
-        function onPlayClick(event) {
-            var vFirst, vSecond;
-
-            if (Number(data1.attr("data-sync")) < (Number(data2.attr("data-sync")))) {
-                vFirst = player1; // player element
-                vFirstData = data1; // dom element
-                vSecond = player2;
-                vSecondData = data2;
-                console.log("one is first");
-            } else {
-                vFirst = player2;
-                vFirstData = data2;
-                vSecond = player1;
-                vSecondData = data1;
-                console.log("two is first");
-
-            }
-
-            // Event listener
-            window.setInterval(function() {
-                console.log("in event listener");
-                console.log(vFirst.getCurrentTime());
-                console.log(vSecondData.attr('data-sync'));
-                console.log(vSecondData.attr('data-status'));
-
-                if ((vFirst.getCurrentTime() >= vSecondData.attr('data-sync')) && (vSecondData.attr('data-status') == 'notPlaying')){ 
-                    vSecond.mute();
-                    vSecond.playVideo();
-                    console.log('VIDEO PLAYING');
-                    console.log(vFirst.getCurrentTime());
-                    vSecondData.attr('data-status', "playing");
-                }
-
-                if ((vFirst.getPlayerState() == 0) && (vSecond.getPlayerState() == 1)) { // first is done playing
-                    //unmute second
-                    vSecond.unMute();
-                }
-            }, 200);
-
-            vFirst.playVideo();
-            data1.attr('data-status', 'playing');
-
-            if ((data2.attr('data-status') == 'playing') && (data1.attr('data-status') == 'playing')) {
-                vSecond.playVideo();
-                vFirst.playVideo();
-            }
-        }
-                  
-        function onPauseClick(event) {
-            player1.pauseVideo(); 
-            player2.pauseVideo();
-        }  
-        
-
-
-
-        // var done = false;
-        // function onPlayerStateChange(event) {
-        //     if (event.data == YT.PlayerState.PLAYING && !done) {
-        //       setTimeout(startVideo, 4000);
-        //       done = true;
-        //     }
-        // }
-
-        // }
-        // function startVideo() {
-        //     // player.startVideo();
-
-
-
-              
-       
-
-            init();
-
-            </script>
-</body>
+    </body>
 </html>
