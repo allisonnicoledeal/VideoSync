@@ -21,3 +21,4 @@ The front end utilizes HTML5, Bootstrap, JavaScript, and the YouTube Player API.
 
 
 ![Alt text](screenshots/screenshot.png "User interface")
+![Alt text](screenshots/diagram.png "Explanation diagram")
