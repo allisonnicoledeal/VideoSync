@@ -1,23 +1,20 @@
-             {% extends "layout.html" %}
+ {% extends "layout.html" %}
 
-             {% block content %}
-             <div id="displayVideos" class="row">
-            <div class="span12 title">
-                <h1>
-                    <span class="mainArtist">{{video_group.analysis_group[0].artist}}</span></br>
-                    <span class="mainTitle">{{video_group.analysis_group[0].title}}</span></br>
-                    <span class="mainEvent">{{video_group.analysis_group[0].event}}</span>
-                </h1>
-            </div>       
+ {% block content %}
+ <div id="displayVideos" class="row">
+<div class="span12 title">
+    <h1>
+        <span class="mainArtist">{{video_group.analysis_group[0].analysis_track.artist}}</span></br>
+        <span class="mainTitle">{{video_group.analysis_group[0].analysis_track.title}}</span></br>
+        <span class="mainEvent">{{video_group.analysis_group[0].analysis_track.event}}</span>
+    </h1>
+</div>       
 
-
-             <div class="video-stripe span12">    
-
-
-                {% for video in video_group.analysis_group %}
-                <div id="data-{{loop.index}}" class="span6" data-source="{{video.analysis_track.youtube_url}}" data-sync="{{video.sync_point}}" data-status="notPlaying">
-                    <div id="iframe-{{loop.index}}"></div>               
-                </div>
-            {% endfor %}
-            {% endblock %}
+ <div class="video-stripe span12">    
+    {% for video in video_group.analysis_group %}
+    <div id="data-{{loop.index}}" class="span6" data-source="{{video.analysis_track.youtube_url}}" data-sync="{{video.sync_point}}" data-status="notPlaying">
+        <div id="iframe-{{loop.index}}"></div>
+    </div>
+{% endfor %}
+{% endblock %}
 

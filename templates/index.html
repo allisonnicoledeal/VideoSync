@@ -1,24 +1,22 @@
-             {% extends "layout.html" %}
+ {% extends "layout.html" %}
 
-             {% block content %}
-             <div id="displayVideos" class="row">
-            <div class="span12 title">
-                <h1>
-                    <span class="mainTitle">{{video1.title}}</span></br>
-                    <span class="mainArtist">{{video1.artist}}</span></br>
-                    <span class="mainEvent">{{video1.event}}</span>
-                </h1>
-            </div>       
+ {% block content %}
+ <div id="displayVideos" class="row">
+<div class="span12 title">
+    <h1>
+        <span class="mainArtist">{{video1.artist}}</span></br>
+        <span class="mainTitle">{{video1.title}}</span></br>
+        <span class="mainEvent">{{video1.event}}</span>
+    </h1>
+</div>       
+
+ <div class="video-stripe span12">    
+	<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
+        <div id="iframe-1"></div>               
+    </div>
+    <div id="data-2" class="span6" data-source="{{video2.youtube_url}}" data-sync="{{video2.analysis_track[0].sync_point}}" data-status="notPlaying">
+        <div id="iframe-2"></div>
+    </div>
+{% endblock %}
 
 
-             <div class="video-stripe span12">    
-				<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
-		            <div id="iframe-1"></div>               
-		        </div>
-		        <div id="data-2" class="span6" data-source="{{video2.youtube_url}}" data-sync="{{video2.analysis_track[0].sync_point}}" data-status="notPlaying">
-		            <div id="iframe-2"></div>
-		        </div>
-            {% endblock %}
-
-
-            

@@ -114,12 +114,12 @@
                         {% for analysis in group.analysis_group %}
                             {% if loop.index == 1 %}
                                 <div id="leftVideo" class="thumb-video">
-                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="right"></img></a>
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" style="height:141px; width:100%" align="right"></img></a>
                                 </div>
                             {% endif %}
                             {% if loop.index == 2 %}
                                 <div id="rightVideo" class="thumb-video right">
-                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
+                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" style="height:141px; width:100%" align="left"></img></a>
                                 </div>
                                 
                                 <div class="thumbnail-info">
