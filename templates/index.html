@@ -1,160 +1,24 @@
-<!-- http://www.quirksmode.org/dom/inputfile.html -->
+             {% extends "layout.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Video Sync</title>
-    <link rel="icon" type="image/png" href="static/img/favicon.ico">
-    <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
-    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/videosync.css" type="text/css">
-</head>
-
-<body>
-	<div class="container">
-		<div id="heading" class="row">
-			<div id="header-text" class="span6">
-				<h1>VideoSync</h1>
-            </div>
-		</div>
-		<div id="displayVideos" class="row">
+             {% block content %}
+             <div id="displayVideos" class="row">
             <div class="span12 title">
                 <h1>
                     <span class="mainTitle">{{video1.title}}</span></br>
                     <span class="mainArtist">{{video1.artist}}</span></br>
                     <span class="mainEvent">{{video1.event}}</span>
                 </h1>
-            </div>        
-            <div class="video-stripe span12">    
+            </div>       
+
+
+             <div class="video-stripe span12">    
 				<div id="data-1" class="span6" data-source="{{video1.youtube_url}}" data-sync="{{video1.analysis_track[0].sync_point}}" data-status="notPlaying">
 		            <div id="iframe-1"></div>               
 		        </div>
 		        <div id="data-2" class="span6" data-source="{{video2.youtube_url}}" data-sync="{{video2.analysis_track[0].sync_point}}" data-status="notPlaying">
 		            <div id="iframe-2"></div>
 		        </div>
-            </div>
-            <div class="span9 control-buttons">    
-                <button id="playAll" class="btn btn-custom-lighten" disabled>
-                    <i class="icon-play icon-3x"></i>
-                </button> 
-                <button id="pauseAll" class="btn" disabled>
-                    <i class="icon-pause icon-3x"></i>
-                </button>
-            </div>    
-		</div>
-        <hr/>
-		<div class="row">
-			<div id="upload" class="span6">
-                <div id="frame">
-                <div id="uploadDetails">
-                <h3>Synchronize a new video set</h3>
-				<form class="form" method="post">
-					<div class="control-group">
-						<label class="control-label" for="title"></label>
-						<div class="controls">
-							<input type="text" class="span2" name="title" placeholder="Title"/><br/>
-						</div>
-					</div>
-					<div class="control-group">
-				        <label class="control-label" for="artist"></label>
-						<div class="controls">
-				        	<input type="text" class="span2" name="artist" placeholder="Artist"/><br/>
-						</div>
-					</div>
+            {% endblock %}
 
-					<div class="control-group">
-				        <label class="control-label" for="event"></label>
-						<div class="controls">
-				        	<input type="text" class="span2" name="event" placeholder="Event"/><br/>
-						</div>
-					</div>
-                    <div class"uploadText" ><h5>Use a YouTube link</h5></div>
-                    <div class="control-group">
-                        <label class="control-label" for="url1"></label>
-                        <div class="controls">
-                            <input type="text" class="span3" name="url1" placeholder="Youtube URL"><br/>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="url2"></label>
-                        <div class="controls">
-                            <input type="text" class="span3" name="url2" placeholder="Youtube URL"><br/>
-                        </div>
-                    </div>
 
-                    <h5>or upload a video</h5>
-                    <div class="control-group">
-                        <label class="control-label" for="file1"></label>
-                        <div class="controls file-inputs">
-                            <input type="file" class="span3 file hidden" name="file1">
-                            <div class="fakefile">
-                                <input>
-                                <img src="http://www.quirksmode.org/dom/pix/button_select.gif">
-                            </div>
-                        </div>
-                    </div>
-                </br>
-            </br>
-                    <div class="control-group">
-                        <label class="control-label" for="file2"></label>
-                        <div class="controls file-inputs">
-                            <input type="file" class="span3 file hidden" name="file2">
-                            <div class="fakeFile">
-                                <input>
-                                <img src="http://www.quirksmode.org/dom/pix/button_select.gif">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="synch">
-				        <button id="uploadButton" class="btn btn-custom-lighten" type="submit">Synchronize</button>
-				    </div>
-			    </form>
-
-            </div>
-            </div>
-			</div>
-
-			<div class="span6 thumb-list" >
-				{% for group in groups %}                 
-                    {% if loop.index % 2 == 0 %}
-                        {% set ally_class="even" %}                            
-                    {% else %}
-                        {% set ally_class="odd" %}                            
-                    {% endif %}
-					<div class="row {{ally_class}} library-item">                    
-			            {% for analysis in group.analysis_group %}
-                            {% if loop.index == 1 %}
-                                <div id="leftVideo" class="thumb-video">
-                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="right"></img></a>
-                                </div>
-                            {% endif %}
-                            {% if loop.index == 2 %}
-                                <div id="rightVideo" class="thumb-video right">
-                                <a href="/watch?group_id={{group.id}}"><img src="{{analysis.analysis_track.thumbnail_url}}" height="250" width="250" align="left"></img></a>
-                                </div>
-                                
-                                <div class="thumbnail-info">
-                                    <a class="btn btn-custom-lighten button-link" href="/watch?group_id={{group.id}}">
-                                            <i class="icon-play icon-2x"></i>
-                                    </a>                          
-                                    <div>
-                                        <span class="artist">{{analysis.analysis_track.artist}}</span>
-                                        <span class="track-title">{{analysis.analysis_track.title}}</span>
-                                        <span class="event">{{analysis.analysis_track.event}}</span>
-                                    </div>                                    
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-		         	</div>
-                {% endfor %}
-		    </div>
-		</div>
-	</div>
-	</div>
-
-    <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="/static/js/videoSync.js" type="text/javascript"></script>
-
-    </body>
-</html>
+            

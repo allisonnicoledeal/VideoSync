@@ -35,11 +35,11 @@
             padding-right: 15px;
             line-height: 20px;
         }
-        .mainArtist{
-            font-weight: bold;
+        .mainTitle{
+            font-weight: normal;
         }
         .mainArtist{
-            font-weight: normal;
+            font-weight: bold;
         }
         .mainEvent{
             font-style: italic;
