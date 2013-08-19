@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Video Sync</title>
+    <link rel="icon" type="image/png" href="static/img/favicon.ico">
 
     <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css">
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
@@ -19,7 +20,7 @@
             margin-left: 0px;
         }
         #header-text h1{
-            font-size: 60px;
+            font-size: 65px;
         }
 
         .video-stripe {
@@ -30,15 +31,13 @@
             padding: 12px 0 12px 0;                        
         }
         .title{
-            margin-top: -10px;
-            background-color: #F7F6F4;
-
+            margin-top: -20px;
         }
 
         .title h1 {
-            text-align: center;
+            text-align: right;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 17px;
             margin:0;
             padding: 0;
             line-height: 20px;
@@ -61,7 +60,9 @@
 
         .library-item {
             margin: 0 0 5px 0;
-            padding: 14px 20px 14px 20px;            
+            padding: 14px 20px 14px 20px;
+            -moz-border-radius: 0px;
+            border-radius: 0px;            
         }
 
         .library-item.odd {
@@ -76,9 +77,24 @@
             margin-top: 0;
             margin-bottom: 10px;
         }
-        #upload > div{
+        #upload{
+            width: 580px;
+            background-color: #D5D1C7;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+        }
+        #frame{
+            margin: 10px 20px 10px 20px;
+            background-color: #B9B8B1;
+            -moz-border-radius: 0px;
+            border-radius: 0px;
+            
+        }
+        #uploadDetails{
             padding-left: 105px;
-            background-color: #cecbc0;
+            padding-top: 10px;
+            padding-bottom: 15px;
+
         }
         .controls{
             padding-left: 45px;
@@ -98,13 +114,33 @@
             font-style: italic;
             display: block;
         }
+        .file{
+            position: relative;
+            text-align: right;
+            -moz-opacity:0;
+            filter:alpha(opacity:0);
+            z-index: 2;
+            opacity: 0;
+        }
+        .file-inputs{
+            position: relative;
+        }
+        .fakefile{
+            position: absolute;
+            top: 0px;
+            left: 0px
+            z-index: 1;
+        }
         
         .synch{
             margin-left: 60px;
             padding-left: 30px;
+            padding-top: 10px;
         }
         #uploadButton{
             font-size: 18px;
+            padding-top: 5px;
+            padding-bottom: 5px;
         }
 
         .thumbnail-info {
@@ -117,6 +153,8 @@
             float: left;
             margin-right: 10px;
             margin-top: 11px;
+            padding-right: 7px;
+            padding-left: 7px;
         }
 
         .thumbnail-info div {
@@ -130,8 +168,9 @@
 
 
         .thumb-list {  
-            width: 540px;
+            width: 580px;
             float: right;
+            margin-left: 10px;
         }
 
         .btn-custom-lighten.active {
@@ -202,17 +241,18 @@
             </div>
             <div class="span12 control-buttons">    
                 <button id="playAll" class="btn btn-custom-lighten" disabled>
-                    <i class="icon-play icon-4x"></i>
+                    <i class="icon-play icon-3x"></i>
                 </button> 
                 <button id="pauseAll" class="btn" disabled>
-                    <i class="icon-pause icon-4x"></i>
+                    <i class="icon-pause icon-3x"></i>
                 </button>
             </div>    
 		</div>
         <hr/>
 		<div class="row">
 			<div id="upload" class="span6">
-                <div>
+                <div id="frame">
+                <div id="uploadDetails">
                 <h3>Synchronize a new video set</h3>
 				<form class="form" method="post">
 					<div class="control-group">
@@ -251,20 +291,32 @@
                     <h5>or upload a video</h5>
                     <div class="control-group">
                         <label class="control-label" for="file1"></label>
-                        <div class="controls">
-                            <input type="file" class="span3" name="file1"><br/>
+                        <div class="controls file-inputs">
+                            <input type="file" class="span3 file hidden" name="file1">
+                            <div class="fakefile">
+                                <input>
+                                <img src="http://www.quirksmode.org/dom/pix/button_select.gif">
+                            </div>
                         </div>
                     </div>
+                </br>
+            </br>
                     <div class="control-group">
                         <label class="control-label" for="file2"></label>
-                        <div class="controls">
-                            <input type="file" class="span3" name="file2"><br/>
+                        <div class="controls file-inputs">
+                            <input type="file" class="span3 file hidden" name="file2">
+                            <div class="fakeFile">
+                                <input>
+                                <img src="http://www.quirksmode.org/dom/pix/button_select.gif">
+                            </div>
                         </div>
                     </div>
                     <div class="synch">
 				        <button id="uploadButton" class="btn btn-custom-lighten" type="submit">Synchronize</button>
 				    </div>
 			    </form>
+
+            </div>
             </div>
 			</div>
 
