@@ -59,18 +59,6 @@ def index():
             new_youtube_url2 = "http://www.youtube.com/embed/" + url2[-11:]
             new_thumbnail1 = convert.youtube_thumbnail(url1)
             new_thumbnail2 = convert.youtube_thumbnail(url2)
-            print "+++++++++++++THUMBNAIL URL IN APP.PY", new_thumbnail1
-            print new_thumbnail2
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
-            print " "
             
         # save file 1
         # new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
@@ -206,10 +194,6 @@ def watch():
         return redirect('/watch?group_id=' + str(new_group.id))
 
     return render_template("watch.html", video_group=video_group, groups=groups)
-
-
-
-
 
 
 if __name__ == "__main__":

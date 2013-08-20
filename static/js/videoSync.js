@@ -45,12 +45,12 @@
 
         // Enable Play and Pause buttons if player1 and player2 videos have loaded 2%
         function onPlayerReady(event) {
-            event.target.setPlaybackQuality("small")
-            event.target.playVideo()
-            event.target.pauseVideo()
+            event.target.setPlaybackQuality("small");
+            event.target.playVideo();
+            event.target.pauseVideo();
             window.setInterval(function() {
                 // console.log(event.target.getVideoLoadedFraction());
-                if (event.target.getVideoLoadedFraction() > .02) {
+                if (event.target.getVideoLoadedFraction() > 0.02) {
                     event.target.readyToPlayNow = "true";
                 }
 
@@ -60,7 +60,7 @@
                     // player1.playVideo();
                     // player2.playVideo();
                 }
-            }, 500)
+            }, 500);
         }
 
         function onPlayClick(event) {
@@ -72,22 +72,29 @@
                 vSecond = player2;
                 vSecondData = data2;
                 console.log("one is first");
+                console.log("two data status");
+                console.log(vSecondData.attr('data-status'));
             } else {
                 vFirst = player2;
                 vFirstData = data2;
                 vSecond = player1;
                 vSecondData = data1;
                 console.log("two is first");
+                console.log("two data status");
+                console.log(vSecondData.attr('data-status'));
             }
 
             // Event listener
             window.setInterval(function() {
-                console.log("in event listener");
+                console.log("vFirst current time");
                 console.log(vFirst.getCurrentTime());
+                console.log("vSecond data-sync");
                 console.log(vSecondData.attr('data-sync'));
+                console.log("vSecond data-status");
                 console.log(vSecondData.attr('data-status'));
 
-                if ((vFirst.getCurrentTime() >= vSecondData.attr('data-sync')) && (vSecondData.attr('data-status') == 'notPlaying')){ 
+
+                if ((vFirst.getCurrentTime() >= vSecondData.attr('data-sync')) && (vSecondData.attr('data-status') == 'notPlaying')){
                     vSecond.mute();
                     vSecond.playVideo();
                     console.log('VIDEO PLAYING');
@@ -102,7 +109,7 @@
             }, 200);
 
             vFirst.playVideo();
-            data1.attr('data-status', 'playing');
+            vFirstData.attr('data-status', 'playing');
 
             if ((data2.attr('data-status') == 'playing') && (data1.attr('data-status') == 'playing')) {
                 vSecond.playVideo();
@@ -111,9 +118,9 @@
         }
                   
         function onPauseClick(event) {
-            player1.pauseVideo(); 
+            player1.pauseVideo();
             player2.pauseVideo();
-        }   
+        }
        
             init();
 

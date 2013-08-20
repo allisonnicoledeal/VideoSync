@@ -21,8 +21,8 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    video1 = model.session.query(model.Track).get(55)
-    video2 = model.session.query(model.Track).get(56)
+    video1 = model.session.query(model.Track).get(23)
+    video2 = model.session.query(model.Track).get(24)
     groups = model.session.query(model.Group).all()
 
     if request.method == 'POST':
