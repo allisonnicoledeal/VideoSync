@@ -21,8 +21,10 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    video1 = model.session.query(model.Track).get(23)
-    video2 = model.session.query(model.Track).get(24)
+    # video1 = model.session.query(model.Track).get(55)
+    # video2 = model.session.query(model.Track).get(56)
+    video1 = model.session.query(model.Track).get(11)
+    video2 = model.session.query(model.Track).get(12)
     groups = model.session.query(model.Group).all()
 
     if request.method == 'POST':
@@ -143,13 +145,15 @@ def watch():
             new_filename2 = convert.youtube_to_mp4(url2, new_title, UPLOAD_FOLDER)
             new_youtube_url1 = "http://www.youtube.com/embed/" + url1[-11:]
             new_youtube_url2 = "http://www.youtube.com/embed/" + url2[-11:]
+            new_thumbnail1 = convert.youtube_thumbnail(url1)
+            new_thumbnail2 = convert.youtube_thumbnail(url2)
             
         # save file 1
         # new_filename_webm1 = convert.convert_video(filename1, UPLOAD_FOLDER)  # convert file to webm
         new_filename_webm1 = "webmfilename"
         new_file1 = model.Track(title=new_title, filename=new_filename1,
                                 artist=new_artist, event=new_event, path=new_path,
-                                filename_webm=new_filename_webm1, youtube_url=new_youtube_url1)
+                                filename_webm=new_filename_webm1, youtube_url=new_youtube_url1, thumbnail_url=new_thumbnail1)
         model.session.add(new_file1)
 
         # save file 2
@@ -157,7 +161,7 @@ def watch():
         new_filename_webm2 = "webmfilename"
         new_file2 = model.Track(title=new_title, filename=new_filename2,
                                 artist=new_artist, event=new_event, path=new_path,
-                                filename_webm=new_filename_webm2, youtube_url=new_youtube_url2)
+                                filename_webm=new_filename_webm2, youtube_url=new_youtube_url2, thumbnail_url=new_thumbnail2)
         model.session.add(new_file2)
 
         # save group info into db
@@ -190,10 +194,6 @@ def watch():
         return redirect('/watch?group_id=' + str(new_group.id))
 
     return render_template("watch.html", video_group=video_group, groups=groups)
-
-
-
-
 
 
 if __name__ == "__main__":
