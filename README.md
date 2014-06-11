@@ -1,7 +1,9 @@
 VideoSync
 =========
 
-This VideoSync web application automatically synchronizes and combines personal and crowd-sourced YouTube video clips to recreate a live concert experience from multiple angles. 
+This VideoSync web application automatically synchronizes and combines personal and crowd-sourced YouTube video clips to recreate a live concert experience from multiple angles.
+
+Project blog: [https://medium.com/college-and-careers/94097dc9df95] (https://medium.com/college-and-careers/94097dc9df95)
 
 ###Align Audio
 #####(alignment.py)
