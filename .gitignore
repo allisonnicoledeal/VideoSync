@@ -1,10 +1,2 @@
-*.pyc
-env
-
-freq_plot_fxns.py
-freq_plot_sample1.py
-specto_test.py
-test2.py
-test.py
-
-
+uploads
+*.db-journal

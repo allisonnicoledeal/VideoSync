@@ -1,12 +1,11 @@
-from sqlalchemy.ext.declarative import declarative_base
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from sqlalchemy import create_engine, Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 
-
 engine = create_engine("sqlite:///tracks.db", echo=True)
-session = scoped_session(sessionmaker(bind=engine,
-                                      autocommit=False,
-                                      autoflush=False))
+session = scoped_session(sessionmaker(bind=engine, autocommit=False, autoflush=False))
 
 Base = declarative_base()
 Base.query = session.query_property()
@@ -44,16 +43,14 @@ class Analysis(Base):
     analyses_group = relationship("Group", backref=backref("analysis_group"), order_by=id)
     analysis_track = relationship("Track", backref=backref("analysis_track"))  # uselist=False
 
+
 class Group(Base):
     __tablename__ = "groups"
 
     id = Column(Integer, primary_key=True)
     timestamp = Column(DateTime, nullable=True)
-    
 
     # analysis_group
-
-
 
 # class AnalyzeTrack(Base):
 #     __tablename__ = "analyze_tracks"
@@ -69,7 +66,6 @@ class Group(Base):
 # End of class declarations
 
 
-
 # def connect():
 #     global ENGINE
 #     global Session
@@ -78,10 +74,3 @@ class Group(Base):
 #     Session = sessionmaker(bind=ENGINE)
 
 #     return Session()
-
-
-def main():
-    pass
-
-if __name__ == "main":
-    main()
